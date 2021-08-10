@@ -7,10 +7,10 @@ package locnt.account;
 
 import java.io.Serializable;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import javax.naming.NamingException;
 import locnt.dtos.AccountDTO;
 import locnt.utils.DBUtils;
@@ -69,12 +69,12 @@ public class AccountDAO implements Serializable {
                     String password = rs.getString("Password");
                     String name = rs.getString("Name");
                     String address = rs.getString("Address");
-                    String phone = rs.getString("Phone");
+                    int phone = rs.getInt("Phone");
                     Date date = rs.getDate("CreateDate");
                     int roleId = rs.getInt("RoleId");
                     int statusId = rs.getInt("StatusId");
 
-                    AccountDTO dto = new AccountDTO(emailTemp, password, name, 
+                    AccountDTO dto = new AccountDTO(emailTemp, password, name,
                             address, phone, date, roleId, statusId);
                     return dto;
                 }
@@ -91,5 +91,39 @@ public class AccountDAO implements Serializable {
             }
         }
         return null;
+    }
+
+    public boolean createAccount(AccountDTO dto) throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        try {
+            con = DBUtils.makeConnect();
+            java.sql.Date sqlDate = new java.sql.Date(dto.getCreateDate().getTime()); 
+            if (con != null) {
+                String sql = "INSERT INTO Account VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+                stm = con.prepareStatement(sql);
+                stm.setString(1, dto.getEmail());
+                stm.setString(2, dto.getPassword());
+                stm.setString(3, dto.getName());
+                stm.setString(4, dto.getAddress());
+                stm.setInt(5, dto.getPhone());
+                stm.setDate(6, sqlDate);
+                stm.setInt(7, dto.getRoleId());
+                stm.setInt(8, dto.getStatusId());
+                int row = stm.executeUpdate();
+                if (row > 0) {
+                    return true;
+                }
+            }
+        } finally {
+            
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
     }
 }

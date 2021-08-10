@@ -24,6 +24,18 @@
         <servlet-name>SearchBookingServlet</servlet-name>
         <servlet-class>locnt.controller.SearchBookingServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddItemToCartServlet</servlet-name>
+        <servlet-class>locnt.controller.AddItemToCartServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RemoveItemServlet</servlet-name>
+        <servlet-class>locnt.controller.RemoveItemServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CheckoutServlet</servlet-name>
+        <servlet-class>locnt.controller.CheckoutServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DispatcherController</servlet-name>
         <url-pattern>/DispatcherController</url-pattern>
@@ -47,6 +59,18 @@
     <servlet-mapping>
         <servlet-name>SearchBookingServlet</servlet-name>
         <url-pattern>/SearchBookingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddItemToCartServlet</servlet-name>
+        <url-pattern>/AddItemToCartServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RemoveItemServlet</servlet-name>
+        <url-pattern>/RemoveItemServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckoutServlet</servlet-name>
+        <url-pattern>/CheckoutServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

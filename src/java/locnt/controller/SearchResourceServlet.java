@@ -7,7 +7,10 @@ package locnt.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +28,8 @@ import locnt.resource.ResourceDAO;
  */
 public class SearchResourceServlet extends HttpServlet {
 
+    private final String SEARCH_PAGE = "search.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -38,23 +43,52 @@ public class SearchResourceServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        String url = SEARCH_PAGE;
         try {
-            String category = request.getParameter("txtCategorySearch");
-            String name = request.getParameter("txtNameSearch");
-            String date = request.getParameter("txtDateSearch");
+            String category = request.getParameter("txtCategory");
+            String name = request.getParameter("txtName");
+            String dateFromString = request.getParameter("txtDateFrom");
+            String dateToString = request.getParameter("txtDateTo");
 
-            if (!category.isEmpty() && !name.isEmpty() && !date.isEmpty()) {
+            Date dateFrom;
+            Date dateTo;
+            boolean validate = true;
+            int pageIndex = 0;
+            int start = 1;
+            int end = 20;
+
+            if (!dateFromString.isEmpty() && !dateToString.isEmpty()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                dateFrom = new Date(sdf.parse(dateFromString).getTime());
+                dateTo = new Date(sdf.parse(dateToString).getTime());
+                Date dateNow = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+                if (!dateFrom.after(dateNow)) {
+                    validate = false;
+                }
+                if (!dateTo.after(dateFrom)) {
+                    validate = false;
+                }
+
+            } else {
+                dateFrom = null;
+                dateTo = null;
+            }
+            if (validate) {
                 ResourceDAO dao = new ResourceDAO();
-                dao.searchLastname(category, name, date);
+                dao.searchResource(category, name, dateFrom, dateTo);
                 List<ResourceDTO> listSearch = dao.getListSearch();
-                System.out.println(listSearch.size());
+                request.setAttribute("SEARCHRESULT", listSearch);
+                url = SEARCH_PAGE;
             }
 
+        } catch (ParseException ex) {
+            log("CheckoutServlet_Parse " + ex.getMessage());
         } catch (SQLException ex) {
-            Logger.getLogger(SearchResourceServlet.class.getName()).log(Level.SEVERE, null, ex);
+            log("CheckoutServlet_SQL " + ex.getMessage());
         } catch (NamingException ex) {
-            Logger.getLogger(SearchResourceServlet.class.getName()).log(Level.SEVERE, null, ex);
+            log("CheckoutServlet_Naming " + ex.getMessage());
         } finally {
+            request.getRequestDispatcher(url).forward(request, response);
             out.close();
         }
     }

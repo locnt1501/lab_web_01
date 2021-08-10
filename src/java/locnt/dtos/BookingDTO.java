@@ -13,7 +13,7 @@ import java.sql.Date;
  * @author LocPC
  */
 public class BookingDTO implements Serializable {
-    private String bookingId;
+    private int bookingId;
     private Date dateCreate;
     private Date dateBookingFrom;
     private Date dateBookingTo;
@@ -23,7 +23,7 @@ public class BookingDTO implements Serializable {
     public BookingDTO() {
     }
 
-    public BookingDTO(String bookingId, Date dateCreate, Date dateBookingFrom, Date dateBookingTo, int statusId, String email) {
+    public BookingDTO(int bookingId, Date dateCreate, Date dateBookingFrom, Date dateBookingTo, int statusId, String email) {
         this.bookingId = bookingId;
         this.dateCreate = dateCreate;
         this.dateBookingFrom = dateBookingFrom;
@@ -32,11 +32,11 @@ public class BookingDTO implements Serializable {
         this.email = email;
     }
 
-    public String getBookingId() {
+    public int getBookingId() {
         return bookingId;
     }
 
-    public void setBookingId(String bookingId) {
+    public void setBookingId(int bookingId) {
         this.bookingId = bookingId;
     }
 

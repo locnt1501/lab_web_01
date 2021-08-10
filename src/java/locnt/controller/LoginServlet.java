@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import locnt.account.AccountDAO;
+import locnt.account.AccountLoginError;
 import locnt.dtos.AccountDTO;
 import locnt.utils.VerifyRecaptcha;
 
@@ -24,8 +25,9 @@ import locnt.utils.VerifyRecaptcha;
  */
 public class LoginServlet extends HttpServlet {
 
-    private final String searchPage = "search.jsp";
-    private final String invalidPage = "invalid.html";
+    private final String SEARCH_PAGE = "search.jsp";
+    private final String INVALID_PAGE = "invalid.html";
+    private final String LOGIN_PAGE = "login.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,7 +42,7 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String url = invalidPage;
+        String url = INVALID_PAGE;
         try {
             String email = request.getParameter("txtEmail");
             String password = request.getParameter("txtPassword");
@@ -48,20 +50,32 @@ public class LoginServlet extends HttpServlet {
             boolean verify = VerifyRecaptcha.verify(gRecaptchResponse);
             AccountDAO dao = new AccountDAO();
             boolean result = dao.checkLogin(email, password);
-
-            if (result && verify) {
-                AccountDTO dto = dao.getInformation(email);
-                System.out.println("");
-                HttpSession session = request.getSession();
-                session.setAttribute("USER", dto);
-                url = searchPage;
+            boolean foundErr = false;
+            AccountLoginError errors = new AccountLoginError();
+            if (result == false) {
+                foundErr = true;
+                errors.setEmailOrPasswordIncorrect("email or password incorrect!!!");
+            }
+//            if (verify == false) {
+//                foundErr = true;
+//                errors.setReCAPTCHANotChecked("reCAPTCHA not checked!!!");
+//            }
+            if (foundErr) {
+                request.setAttribute("LOGINERROR", errors);
+                url = LOGIN_PAGE;
             } else {
-
+                if (result ) {
+//                    && verify
+                    AccountDTO dto = dao.getInformation(email);
+                    HttpSession session = request.getSession();
+                    session.setAttribute("USER", dto);
+                    url = SEARCH_PAGE;
+                }
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            log("LoginServlet_SQL " + ex.getMessage());
         } catch (NamingException ex) {
-            ex.printStackTrace();
+            log("LoginServlet_Naming " + ex.getMessage());
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
             out.close();

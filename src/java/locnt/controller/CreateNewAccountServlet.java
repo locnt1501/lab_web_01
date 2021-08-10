@@ -7,18 +7,27 @@ package locnt.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import locnt.account.AccountCreateError;
+import locnt.account.AccountDAO;
+import locnt.dtos.AccountDTO;
 
 /**
  *
  * @author LocPC
  */
 public class CreateNewAccountServlet extends HttpServlet {
-    private final String LOGIN_PAGE = "login.jsp";
-    
+
+    private final String SUCCESS = "login.jsp";
+    private final String FAIL = "createNewAccount.jsp";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -32,15 +41,49 @@ public class CreateNewAccountServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String username = request.getParameter("txtUsername");
+        String email = request.getParameter("txtEmail");
         String password = request.getParameter("txtPassword");
-        String confirmPassword = request.getParameter("txtPasswordConfirm");
-        String firstname = request.getParameter("txtFirtname");
-        String lastname = request.getParameter("txtLastname");
-        
+        String repeatPassword = request.getParameter("txtRepeatPassword");
+        String name = request.getParameter("txtName");
+        String phone = request.getParameter("txtPhoneNumber");
+        String address = request.getParameter("txtAddress");
+        int role = 1;
+        int status = 1;
+        String url = FAIL;
+
+        AccountCreateError errors = new AccountCreateError();
+        boolean foundErr = false;
         try {
-            
+
+            if (!password.equals(repeatPassword)) {
+                foundErr = true;
+                errors.setConfirmNotMatchPassword("Repeat Password must match Password");
+            }
+
+            if (foundErr) {
+                request.setAttribute("CREATEERROR", errors);
+            } else {
+                Date dateNow = new Date(System.currentTimeMillis() - 24*60*60*1000);
+                AccountDTO dto = new AccountDTO(email, password, name, address, role, dateNow, role, status);
+                AccountDAO dao = new AccountDAO();
+                boolean result = dao.createAccount(dto);
+                if (result) {
+                    url = SUCCESS;
+                } else {
+                    url = FAIL;
+                }
+            }
+        } catch (SQLException ex) {
+            String msg = ex.getMessage();
+            log("CreateNewAccountServlet_SQL " + ex.getMessage());
+            if (msg.contains("duplicate")) {
+                errors.setEmailIsExisted(email + " is existed");
+                request.setAttribute("CREATEERROR", errors);
+            }
+        } catch (NamingException ex) {
+            log("CreateNewAccountServlet_Naming " + ex.getMessage());
         } finally {
+            request.getRequestDispatcher(url).forward(request, response);
             out.close();
         }
     }

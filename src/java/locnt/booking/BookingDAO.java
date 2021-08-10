@@ -11,11 +11,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import javax.naming.NamingException;
 import locnt.dtos.BookingDTO;
-import locnt.dtos.ResourceDTO;
 import locnt.utils.DBUtils;
 
 /**
@@ -24,20 +21,26 @@ import locnt.utils.DBUtils;
  */
 public class BookingDAO implements Serializable {
 
-    public List<BookingDTO> listSearch;
-
-    public List<BookingDTO> getListSearch() {
-        return listSearch;
-    }
-
-    public void searchBooking(String category, String name, Date dateFrom, Date dateTo) 
-            throws NamingException, SQLException {
+    public int checkoutBookingReturnBookingID(Date createDate, Date dateBookingFrom, Date dateBookingTo,
+            int status, String email) throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
         try {
             con = DBUtils.makeConnect();
-            
+            String sql = "INSERT INTO Booking(DateCreate,DateBookingFrom,DateBookingTo,StatusId, Email) "
+                    + "OUTPUT inserted.BookingId "
+                    + "VALUES (?, ?, ?, ?, ?)";
+            stm = con.prepareStatement(sql);
+            stm.setDate(1, createDate);
+            stm.setDate(2, dateBookingFrom);
+            stm.setDate(3, dateBookingTo);
+            stm.setInt(4, status);
+            stm.setString(5, email);
+            rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("BookingId");
+            }
         } finally {
             if (rs != null) {
                 rs.close();
@@ -49,5 +52,7 @@ public class BookingDAO implements Serializable {
                 con.close();
             }
         }
+
+        return -1;
     }
 }

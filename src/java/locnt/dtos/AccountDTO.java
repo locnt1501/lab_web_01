@@ -6,7 +6,7 @@
 package locnt.dtos;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.sql.Date;
 
 /**
  *
@@ -17,7 +17,7 @@ public class AccountDTO implements Serializable{
     private String password;
     private String name;
     private String address;
-    private String phone;
+    private int phone;
     private Date createDate;
     private int roleId;
     private int statusId;
@@ -25,7 +25,7 @@ public class AccountDTO implements Serializable{
     public AccountDTO() {
     }
 
-    public AccountDTO(String email, String password, String name, String address, String phone, Date createDate, int roleId, int statusId) {
+    public AccountDTO(String email, String password, String name, String address, int phone, Date createDate, int roleId, int statusId) {
         this.email = email;
         this.password = password;
         this.name = name;
@@ -68,11 +68,11 @@ public class AccountDTO implements Serializable{
         this.address = address;
     }
 
-    public String getPhone() {
+    public int getPhone() {
         return phone;
     }
 
-    public void setPhone(String phone) {
+    public void setPhone(int phone) {
         this.phone = phone;
     }
 

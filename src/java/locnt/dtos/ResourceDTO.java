@@ -6,6 +6,7 @@
 package locnt.dtos;
 
 import java.io.Serializable;
+import java.sql.Date;
 
 /**
  *
@@ -13,18 +14,20 @@ import java.io.Serializable;
  */
 public class ResourceDTO implements Serializable {
 
-    private String resourceId;
+    private int resourceId;
     private String itemName;
     private String category;
     private int quantity;
     private String color;
     private String highestOfRole;
     private int statusId;
-
+    private Date dateFrom;
+    private Date dateTo;
+    
     public ResourceDTO() {
     }
 
-    public ResourceDTO(String resourceId, String itemName, String category, int quantity, String color, String highestOfRole, int statusId) {
+    public ResourceDTO(int resourceId, String itemName, String category, int quantity, String color, String highestOfRole, int statusId, Date dateFrom, Date dateTo) {
         this.resourceId = resourceId;
         this.itemName = itemName;
         this.category = category;
@@ -32,13 +35,17 @@ public class ResourceDTO implements Serializable {
         this.color = color;
         this.highestOfRole = highestOfRole;
         this.statusId = statusId;
+        this.dateFrom = dateFrom;
+        this.dateTo = dateTo;
     }
 
-    public String getResourceId() {
+    
+
+    public int getResourceId() {
         return resourceId;
     }
 
-    public void setResourceId(String resourceId) {
+    public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
     }
 
@@ -88,6 +95,22 @@ public class ResourceDTO implements Serializable {
 
     public void setStatusId(int statusId) {
         this.statusId = statusId;
+    }
+
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
     }
     
 

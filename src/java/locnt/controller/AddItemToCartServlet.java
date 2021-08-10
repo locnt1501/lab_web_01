@@ -7,22 +7,29 @@ package locnt.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import locnt.booking.BookingDAO;
+import javax.servlet.http.HttpSession;
+import locnt.dtos.CartDTO;
+import locnt.dtos.ResourceDTO;
+import locnt.resource.ResourceDAO;
+import locnt.resource.ResourceSearch;
 
 /**
  *
  * @author LocPC
  */
-public class SearchBookingServlet extends HttpServlet {
+public class AddItemToCartServlet extends HttpServlet {
+
+    private final String SEARCH_PAGE = "SearchResourceServlet";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -37,36 +44,43 @@ public class SearchBookingServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
+        String url = SEARCH_PAGE;
         try {
+            String title = request.getParameter("txtItemName");
+            int resourceId = Integer.parseInt(request.getParameter("txtResourceId"));
+            
+            HttpSession session = request.getSession();
+            HashMap<Integer, CartDTO> listResourceCart = (HashMap<Integer, CartDTO>) session.getAttribute("CART");
+
+            if (listResourceCart == null) {
+                listResourceCart = new HashMap<>();
+                CartDTO cartDTO = new CartDTO(resourceId, title, 1);
+                listResourceCart.put(resourceId, cartDTO);
+
+            } else {
+                if (listResourceCart.containsKey(resourceId)) {
+                    listResourceCart.get(resourceId).setQuantity(listResourceCart.get(resourceId).getQuantity() + 1);
+                } else {
+                    CartDTO cartDTO = new CartDTO(resourceId, title, 1);
+                    listResourceCart.put(resourceId, cartDTO);
+                }
+            }
+            session.setAttribute("CART", listResourceCart);
+            
+            
             String category = request.getParameter("txtCategory");
             String name = request.getParameter("txtName");
             String dateFromString = request.getParameter("txtDateFrom");
             String dateToString = request.getParameter("txtDateTo");
-            
-            
-            Date dateFrom;
-            Date dateTo;
-            float priceFrom;
-            float priceTo;
-            boolean validate = true;
-            if (!dateFromString.isEmpty() && !dateToString.isEmpty()) {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                dateFrom = new Date(sdf.parse(dateFromString).getTime());
-                dateTo = new Date(sdf.parse(dateToString).getTime());
-                Date dateNow = new Date(System.currentTimeMillis() - 24*60*60*1000);
-                if (!dateFrom.after(dateNow)) {
-                    validate = false;
-                }
-                if (!dateTo.after(dateFrom)) {
-                    validate = false;
-                }
-            }
-            
-            BookingDAO dao = new BookingDAO();
-            
-        } catch (ParseException ex) {
-            Logger.getLogger(SearchBookingServlet.class.getName()).log(Level.SEVERE, null, ex);
+            url = "DispatcherController"
+                    + "?txtCategory=" + category
+                    + "&txtName=" + name
+                    + "&txtDateFrom=" + dateFromString
+                    + "&txtDateTo=" + dateToString
+                    + "&btAction=Search";
+
         } finally {
+            response.sendRedirect(url);
             out.close();
         }
     }

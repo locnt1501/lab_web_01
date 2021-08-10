@@ -40,8 +40,8 @@ public class LogoutServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.invalidate();
             url = SUCCESS;
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            log("LogoutServlet_SQL " + ex.getMessage());
         } finally {
             response.sendRedirect(url);
             out.close();

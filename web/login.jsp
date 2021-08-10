@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -70,17 +71,24 @@
 
         <form action="DispatcherController" method="post" style="width: 25%">
             <div class="container">
+                <c:set var="errors" value="${requestScope.LOGINERROR}" />
                 <label for="txtEmail"><b>Email:</b></label>
                 <input type="text" placeholder="Enter Email" name="txtEmail" required >
 
                 <label for="txtPassword"><b>Password:</b></label>
                 <input type="password" placeholder="Enter Password" name="txtPassword" required>
-                
+
                 <div class="g-recaptcha" style="margin-left: 50px; margin-bottom: 10px"
                      data-sitekey="6LfIbu0bAAAAAFpNAkSoF7cnGb2dsRKBsf588I9d"></div></br>
+                <c:if test="${not empty errors.emailOrPasswordIncorrect}">
+                    <font color="red">
+                    ${errors.emailOrPasswordIncorrect}
+                    </font>
+                </c:if></br>
                 <input type="submit" value="Login" name="btAction" id="button"/>
+
                 <br/>
-                <a href="createNewAccount.html">Click here to Sign Up</a>
+                <a href="createNewAccount.jsp">Click here to Sign Up</a>
             </div>
         </form>
 
