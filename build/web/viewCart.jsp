@@ -40,6 +40,7 @@
                     </div>
                 </nav>
             </div>
+            <a href="search.jsp">Back</a>
             <c:set var="listResourceCart" value="${sessionScope.CART}"/>
             <c:if test="${not empty listResourceCart}">
                 <div class="container">

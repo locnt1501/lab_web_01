@@ -156,4 +156,28 @@ public class ResourceDAO implements Serializable {
         }
         return null;
     }
+
+    public boolean updateQuantity(int quantity, int resourceId) throws SQLException, NamingException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        try {
+            con = DBUtils.makeConnect();
+            String sql = "UPDATE Resource SET Quantity = ? WHERE ResourceId =?";
+            stm = con.prepareStatement(sql);
+            stm.setInt(1, quantity);
+            stm.setInt(2, resourceId);
+            int row = stm.executeUpdate();
+            if (row > 0) {
+                return true;
+            }
+        } finally {
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return false;
+    }
 }

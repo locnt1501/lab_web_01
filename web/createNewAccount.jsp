@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Create</title>
+        <title>Create Page</title>
         <meta charset="UTF-8">
         <style>
             * {box-sizing: border-box}

@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Home Dream Travel Page</title>
+        <title>Home User Page</title>
         <meta charset="utf-8">
         <meta name="robots" content="noindex, nofollow">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -33,7 +33,8 @@
 
                         <c:if test="${not empty user}">
                             <!--<input type="submit" value="View Cart" name="btAction" style="color: black" />-->
-                            <a href="viewCart.jsp">View Cart</a>
+                            <a href="viewCart.jsp" style="margin-right: 20px">View Cart</a>
+                            <input type="submit" value="History" name="btAction" />
                             <input type="submit" value="Logout" name="btAction" style="color: black" />
                         </c:if>
                     </ul>
@@ -43,7 +44,7 @@
                 <div class="col-6 text-center">
                     <h1 class="display-2">Resource Manage!</h1>
                 </div>
-                <div class="col-6" >
+                <form class="col-6" action="DispatcherController" >
                     <div class="row justify-content-center">
                         <div class="card " style="background-color: rgba(0,0,0,0.3);" >
                             <div class="card-body">
@@ -72,7 +73,7 @@
                             </div>
                         </div> <!-- card.// -->
                     </div> <!-- row.// -->
-                </div>
+                </form>
             </div>
         </form> 
         <c:set var="listResourceSearch" value="${requestScope.SEARCHRESULT}"/>
@@ -108,7 +109,7 @@
                                 ${dto.quantity}
                             </td>
                             <td>
-                                
+
                                 <div class="d-flex justify-content-between align-items-center">
                                     <input type="hidden" name="txtCategory" value="${param.txtCategory}"/>
                                     <input type="hidden" name="txtName" value="${param.txtName}"/>

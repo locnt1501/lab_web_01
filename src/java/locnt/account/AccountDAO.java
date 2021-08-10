@@ -98,7 +98,7 @@ public class AccountDAO implements Serializable {
         PreparedStatement stm = null;
         try {
             con = DBUtils.makeConnect();
-            java.sql.Date sqlDate = new java.sql.Date(dto.getCreateDate().getTime()); 
+            Date dateNow = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
             if (con != null) {
                 String sql = "INSERT INTO Account VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
                 stm = con.prepareStatement(sql);
@@ -107,7 +107,7 @@ public class AccountDAO implements Serializable {
                 stm.setString(3, dto.getName());
                 stm.setString(4, dto.getAddress());
                 stm.setInt(5, dto.getPhone());
-                stm.setDate(6, sqlDate);
+                stm.setDate(6, dateNow);
                 stm.setInt(7, dto.getRoleId());
                 stm.setInt(8, dto.getStatusId());
                 int row = stm.executeUpdate();

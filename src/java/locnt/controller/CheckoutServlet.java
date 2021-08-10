@@ -10,8 +10,6 @@ import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +20,8 @@ import locnt.booking.BookingDAO;
 import locnt.bookingdetail.BookingDetailDAO;
 import locnt.dtos.AccountDTO;
 import locnt.dtos.CartDTO;
+import locnt.dtos.ResourceDTO;
+import locnt.resource.ResourceDAO;
 
 /**
  *
@@ -53,10 +53,15 @@ public class CheckoutServlet extends HttpServlet {
             HashMap<Integer, CartDTO> listResourceCart = (HashMap<Integer, CartDTO>) session.getAttribute("CART");
             Date dateNow = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
             int bookingId = dao.checkoutBookingReturnBookingID(dateNow, dateNow, dateNow, 1, dto.getEmail());
+
+            ResourceDAO resourceDAO = new ResourceDAO();
+
             if (bookingId > 0) {
                 BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
                 for (CartDTO element : listResourceCart.values()) {
                     bookingDetailDAO.insertIntoBookingDetail(element.getQuantity(), bookingId, element.getResourceId());
+                    ResourceDTO resourceDTO = resourceDAO.searchResourceById(element.getResourceId());
+                    resourceDAO.updateQuantity(resourceDTO.getQuantity() - element.getQuantity(), element.getResourceId());
                 }
             }
             url = SUCCESS;

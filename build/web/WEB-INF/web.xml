@@ -21,10 +21,6 @@
         <servlet-class>locnt.controller.SearchResourceServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>SearchBookingServlet</servlet-name>
-        <servlet-class>locnt.controller.SearchBookingServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>AddItemToCartServlet</servlet-name>
         <servlet-class>locnt.controller.AddItemToCartServlet</servlet-class>
     </servlet>
@@ -35,6 +31,22 @@
     <servlet>
         <servlet-name>CheckoutServlet</servlet-name>
         <servlet-class>locnt.controller.CheckoutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>SearchBookingServlet</servlet-name>
+        <servlet-class>locnt.controller.SearchBookingServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>UpdateBookingServlet</servlet-name>
+        <servlet-class>locnt.controller.UpdateBookingServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ShowHistoryBooking</servlet-name>
+        <servlet-class>locnt.controller.ShowHistoryBooking</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoginGoogleSevlet</servlet-name>
+        <servlet-class>locnt.controller.LoginGoogleSevlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DispatcherController</servlet-name>
@@ -57,10 +69,6 @@
         <url-pattern>/SearchResourceServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>SearchBookingServlet</servlet-name>
-        <url-pattern>/SearchBookingServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>AddItemToCartServlet</servlet-name>
         <url-pattern>/AddItemToCartServlet</url-pattern>
     </servlet-mapping>
@@ -71,6 +79,22 @@
     <servlet-mapping>
         <servlet-name>CheckoutServlet</servlet-name>
         <url-pattern>/CheckoutServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SearchBookingServlet</servlet-name>
+        <url-pattern>/SearchBookingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateBookingServlet</servlet-name>
+        <url-pattern>/UpdateBookingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShowHistoryBooking</servlet-name>
+        <url-pattern>/ShowHistoryBooking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginGoogleSevlet</servlet-name>
+        <url-pattern>/LoginGoogleSevlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

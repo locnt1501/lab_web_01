@@ -85,8 +85,8 @@
                     ${errors.emailOrPasswordIncorrect}
                     </font>
                 </c:if></br>
-                <input type="submit" value="Login" name="btAction" id="button"/>
 
+                <input type="submit" value="Login" name="btAction" id="button"/>
                 <br/>
                 <a href="createNewAccount.jsp">Click here to Sign Up</a>
             </div>
