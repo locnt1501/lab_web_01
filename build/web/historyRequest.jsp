@@ -53,7 +53,6 @@
                     <tr>
                         <th>No.</th>
                         <th>Item Name</th>
-                        <th>Category</th>
                         <th>Date Create</th>
                         <th>Status</th>
                         <th>Action</th>
@@ -63,8 +62,17 @@
                     <c:forEach var="dto" items="${listBookingHistory}" varStatus="counter">
                         <tr>
                             <td>${counter.count}</td>
-                            <td>${dto.itemName}</td>
-                            <td>${dto.category}</td>
+                            <td>
+                                <table border="1" style="width: 100%">
+                                        <tbody  >
+                                            <c:forEach var="item" items="${dto.listItemName}">
+                                                <tr>
+                                                    <td>${item}</td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                            </td>
                             <td>${dto.createDate}</td>
                             <td>${dto.status}</td>
                             <td>

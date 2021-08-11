@@ -2,6 +2,7 @@ package locnt.dtos;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -15,20 +16,18 @@ import java.sql.Date;
 public class BookingHistoryDTO implements Serializable {
 
     private int bookingId;
-    private String itemName;
-    private String category;
     private Date createDate;
     private String status;
+    private List<String> listItemName;
 
     public BookingHistoryDTO() {
     }
 
-    public BookingHistoryDTO(int bookingId, String itemName, String category, Date createDate, String status) {
+    public BookingHistoryDTO(int bookingId, Date createDate, String status, List<String> listItemName) {
         this.bookingId = bookingId;
-        this.itemName = itemName;
-        this.category = category;
         this.createDate = createDate;
         this.status = status;
+        this.listItemName = listItemName;
     }
 
     public int getBookingId() {
@@ -37,22 +36,6 @@ public class BookingHistoryDTO implements Serializable {
 
     public void setBookingId(int bookingId) {
         this.bookingId = bookingId;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 
     public Date getCreateDate() {
@@ -69,6 +52,14 @@ public class BookingHistoryDTO implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<String> getListItemName() {
+        return listItemName;
+    }
+
+    public void setListItemName(List<String> listItemName) {
+        this.listItemName = listItemName;
     }
 
 }

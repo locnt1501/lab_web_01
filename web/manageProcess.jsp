@@ -50,66 +50,74 @@
             <c:set var="listSearchBooking" value="${requestScope.LISTBOOKINGSEARCH}" />
             <a href="search.jsp">Search Resource</a>
             <c:if test="${not empty listSearchBooking}">
-                <form action="DispatcherController">
-                    <table border="1">
-                        <thead>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Booking ID</th>
+                            <th>Item Name</th>
+                            <th>Date Create</th>
+                            <th>Date Booking From</th>
+                            <th>Date Booking To</th>
+                            <th>User Request</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="dto" varStatus="counter" items="${listSearchBooking}" >
+                            <c:set var="dtoItemName" value="${dto.listItemName}" />
                             <tr>
-                                <th>No.</th>
-                                <th>Booking ID</th>
-                                <th>Item Name</th>
-                                <th>Date Create</th>
-                                <th>Date Booking From</th>
-                                <th>Date Booking To</th>
-                                <th>User Request</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach var="dto" varStatus="counter" items="${listSearchBooking}">
-                                <tr>
-                                    <td>
-                                        ${counter.count}
-                                    </td>
-                                    <td>
-                                        ${dto.getBookingId()}
-                                    </td>
-                                    <td>
-                                        ${dto.getItemName()}
-                                    </td>
-                                    <td>
-                                        ${dto.getDateCreate()}
-                                    </td>
+                                <td>
+                                    ${counter.count}
+                                </td>
+                                <td>
+                                    ${dto.getBookingId()}
+                                </td>
+                                <td>
+                                    <table border="1" style="width: 100%">
+                                        <tbody  >
+                                            <c:forEach var="item" items="${dtoItemName}">
+                                                <tr>
+                                                    <td>${item}</td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </td>
+                                <td>
+                                    ${dto.getDateCreate()}
+                                </td>
+                                <td>
+                                    ${dto.getDateBookingFrom()}
+                                </td>
+                                <td>
+                                    ${dto.getDateBookingTo()}
+                                </td>
+                                <td>
+                                    ${dto.getEmail()}
+                                </td>
+                        <form action="DispatcherController">
+                            <td>
+                                <select name="valueStatus">
+                                    <option value="1" ${dto.getStatusId() == 1 ? 'selected="selected"' : ''}>New</option>
+                                    <option value="2" ${dto.getStatusId() == 2 ? 'selected="selected"' : ''}>Accept</option>
+                                    <option value="3" ${dto.getStatusId() == 3 ? 'selected="selected"' : ''}>Delete</option>
+                                </select>  
+                            </td>
 
-                                    <td>
-                                        ${dto.getDateBookingFrom()}
-                                    </td>
-                                    <td>
-                                        ${dto.getDateBookingTo()}
-                                    </td>
-                                    <td>
-                                        ${dto.getEmail()}
-                                    </td>
-                                    
-                                    <td>
-                                        <select name="valueStatus">
-                                            <option value="1" ${dto.getStatusId() == 1 ? 'selected="selected"' : ''}>New</option>
-                                            <option value="2" ${dto.getStatusId() == 2 ? 'selected="selected"' : ''}>Accept</option>
-                                            <option value="3" ${dto.getStatusId() == 3 ? 'selected="selected"' : ''}>Delete</option>
-                                        </select>  
-                                    </td>
-                                    <td>
-                                        <input type="hidden" name="txtBookingId" value="${dto.getBookingId()}" />
-                                        <input type="hidden" name="txtValue" value="${param.txtValue}" />
-                                        <input type="hidden" name="ddList" value="${param.ddList}" />
-                                        <input type="submit" value="Update" name="btAction" />
-                                    </td>
-                                    
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </form>
+                            <td>
+                                <input type="hidden" name="txtBookingId" value="${dto.getBookingId()}" />
+                                <input type="hidden" name="txtValue" value="${param.txtValue}" />
+                                <input type="hidden" name="ddList" value="${param.ddList}" />
+                                <input type="submit" value="Update" name="btAction" />
+                            </td>
+                        </form>
+
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
                 <c:set var="pages" value="${requestScope.PAGES}" />
                 <nav style="margin-top: 20px; background-color: white;"> <!--Paging-->
                     <ul class="pagination justify-content-center">

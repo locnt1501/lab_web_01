@@ -7,6 +7,7 @@ package locnt.dtos;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.List;
 
 /**
  *
@@ -19,19 +20,19 @@ public class BookingRequestProcessDTO implements Serializable{
     private Date dateBookingTo;
     private int statusId;
     private String email;
-    private String itemName;
+    private List<String> listItemName;
 
     public BookingRequestProcessDTO() {
     }
 
-    public BookingRequestProcessDTO(int bookingId, Date dateCreate, Date dateBookingFrom, Date dateBookingTo, int statusId, String email, String itemName) {
+    public BookingRequestProcessDTO(int bookingId, Date dateCreate, Date dateBookingFrom, Date dateBookingTo, int statusId, String email, List<String> listItemName) {
         this.bookingId = bookingId;
         this.dateCreate = dateCreate;
         this.dateBookingFrom = dateBookingFrom;
         this.dateBookingTo = dateBookingTo;
         this.statusId = statusId;
         this.email = email;
-        this.itemName = itemName;
+        this.listItemName = listItemName;
     }
 
     public int getBookingId() {
@@ -82,12 +83,14 @@ public class BookingRequestProcessDTO implements Serializable{
         this.email = email;
     }
 
-    public String getItemName() {
-        return itemName;
+    public List<String> getListItemName() {
+        return listItemName;
     }
 
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
+    public void setListItemName(List<String> listItemName) {
+        this.listItemName = listItemName;
     }
+
+    
     
 }

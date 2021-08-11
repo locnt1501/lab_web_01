@@ -80,10 +80,9 @@ public class BookingDAO implements Serializable {
         try {
             con = DBUtils.makeConnect();
             if (con != null) {
-                String sql = "SELECT b.BookingId, b.DateCreate, b.DateBookingFrom, DateBookingTo, b.StatusId, b.Email, r.ItemName "
-                        + "FROM Booking b, BookingDetail bd, Resource r "
-                        + "WHERE b.BookingId = bd.BookingId and bd.ResourceId = r.ResourceId "
-                        + "and b.StatusId= ? and b.Email = ? "
+                String sql = "SELECT b.BookingId, b.DateCreate, b.DateBookingFrom, DateBookingTo, b.StatusId, b.Email "
+                        + "FROM Booking b "
+                        + "WHERE b.StatusId= ? and b.Email = ? "
                         + "ORDER BY DateCreate "
                         + "OFFSET ? ROWS "
                         + "FETCH NEXT ? ROWS ONLY";
@@ -100,9 +99,17 @@ public class BookingDAO implements Serializable {
                     Date dateTo = rs.getDate("DateBookingTo");
                     int statusID = rs.getInt("StatusId");
                     String emailDB = rs.getString("Email");
-                    String itemName = rs.getString("ItemName");
-                    BookingRequestProcessDTO dto = new BookingRequestProcessDTO(bookingId, dateCreate, 
-                            dateFrom, dateTo, statusID, emailDB, itemName);
+
+                    String subSql = "SELECT r.ItemName FROM BookingDetail db "
+                            + "Left JOIN Resource r ON r.ResourceId = db.ResourceId WHERE db.BookingId = " + bookingId;
+                    stm = con.prepareStatement(subSql);
+                    ResultSet rsSub = stm.executeQuery();
+                    List<String> listItemName = new ArrayList<>();
+                    while (rsSub.next()) {
+                        listItemName.add(rsSub.getString("ItemName"));
+                    }
+                    BookingRequestProcessDTO dto = new BookingRequestProcessDTO(bookingId, dateCreate,
+                            dateFrom, dateTo, statusID, emailDB, listItemName);
                     if (this.listBooking == null) {
                         this.listBooking = new ArrayList<BookingRequestProcessDTO>();
                     }
@@ -156,21 +163,28 @@ public class BookingDAO implements Serializable {
         try {
             con = DBUtils.makeConnect();
             if (con != null) {
-                String sql = "SELECT r.ItemName, r.Category, b.DateCreate, s.Name, b.BookingId "
-                        + "FROM BookingDetail bd, Booking b, Resource r, Status s "
-                        + "WHERE bd.ResourceId = r.ResourceId and bd.BookingId = b.BookingId "
-                        + "and b.StatusId = s.StatusId and b.Email = ? and b.DateCreate < ? ORDER BY b.DateCreate";
+                String sql = "SELECT  b.DateCreate, s.Name, b.BookingId "
+                        + "FROM Booking b, Status s "
+                        + "WHERE b.StatusId = s.StatusId and b.Email = ? and b.DateCreate < ? ORDER BY b.DateCreate";
                 stm = con.prepareStatement(sql);
                 stm.setString(1, email);
                 stm.setDate(2, dateCreate);
                 rs = stm.executeQuery();
                 while (rs.next()) {
                     int bookingId = rs.getInt("BookingId");
-                    String itemName = rs.getString("ItemName");
-                    String category = rs.getString("Category");
                     Date dateCreateDB = rs.getDate("DateCreate");
                     String status = rs.getString("Name");
-                    BookingHistoryDTO dto = new BookingHistoryDTO(bookingId,itemName, category, dateCreateDB, status);
+                    
+                    String subSql = "SELECT r.ItemName FROM BookingDetail db "
+                            + "Left JOIN Resource r ON r.ResourceId = db.ResourceId WHERE db.BookingId = " + bookingId;
+                    stm = con.prepareStatement(subSql);
+                    ResultSet rsSub = stm.executeQuery();
+                    List<String> listItemName = new ArrayList<>();
+                    while (rsSub.next()) {
+                        listItemName.add(rsSub.getString("ItemName"));
+                    }
+                    
+                    BookingHistoryDTO dto = new BookingHistoryDTO(bookingId, dateCreateDB, status, listItemName);
                     if (listBookingHistory == null) {
                         this.listBookingHistory = new ArrayList<BookingHistoryDTO>();
                     }

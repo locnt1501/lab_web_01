@@ -12,52 +12,52 @@ import java.io.Serializable;
  * @author LocPC
  */
 public class BookingDetailDTO implements Serializable {
-    private int BookingDetailId;
-    private int Amount;
-    private int BookingId;
-    private int ResourceId;
+
+    private int bookingDetailId;
+    private int amount;
+    private int bookingId;
+    private int resourceId;
 
     public BookingDetailDTO() {
     }
 
-    public BookingDetailDTO(int BookingDetailId, int Amount, int BookingId, int ResourceId) {
-        this.BookingDetailId = BookingDetailId;
-        this.Amount = Amount;
-        this.BookingId = BookingId;
-        this.ResourceId = ResourceId;
+    public BookingDetailDTO(int bookingDetailId, int amount, int bookingId, int resourceId) {
+        this.bookingDetailId = bookingDetailId;
+        this.amount = amount;
+        this.bookingId = bookingId;
+        this.resourceId = resourceId;
     }
 
     public int getBookingDetailId() {
-        return BookingDetailId;
+        return bookingDetailId;
     }
 
-    public void setBookingDetailId(int BookingDetailId) {
-        this.BookingDetailId = BookingDetailId;
+    public void setBookingDetailId(int bookingDetailId) {
+        this.bookingDetailId = bookingDetailId;
     }
 
     public int getAmount() {
-        return Amount;
+        return amount;
     }
 
-    public void setAmount(int Amount) {
-        this.Amount = Amount;
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public int getBookingId() {
-        return BookingId;
+        return bookingId;
     }
 
-    public void setBookingId(int BookingId) {
-        this.BookingId = BookingId;
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
     }
 
     public int getResourceId() {
-        return ResourceId;
+        return resourceId;
     }
 
-    public void setResourceId(int ResourceId) {
-        this.ResourceId = ResourceId;
+    public void setResourceId(int resourceId) {
+        this.resourceId = resourceId;
     }
-    
-    
+
 }

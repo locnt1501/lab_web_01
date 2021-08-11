@@ -116,7 +116,6 @@
                                 ${dto.quantity}
                             </td>
                             <td>
-
                                 <div class="d-flex justify-content-between align-items-center">
                                     <input type="hidden" name="txtCategory" value="${param.txtCategory}"/>
                                     <input type="hidden" name="txtName" value="${param.txtName}"/>
