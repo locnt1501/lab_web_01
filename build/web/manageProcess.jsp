@@ -55,6 +55,7 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
+                                <th>Item Name</th>
                                 <th>Date Create</th>
                                 <th>Date Booking From</th>
                                 <th>Date Booking To</th>
@@ -68,7 +69,9 @@
                                 <tr>
                                     <td>
                                         ${counter.count}
-
+                                    </td>
+                                    <td>
+                                        ${dto.getItemName()}
                                     </td>
                                     <td>
                                         ${dto.getDateCreate()}

@@ -52,6 +52,14 @@
         <servlet-name>DeleteBookingServlet</servlet-name>
         <servlet-class>locnt.controller.DeleteBookingServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>UserVerifyServlet</servlet-name>
+        <servlet-class>locnt.controller.UserVerifyServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>VerifyCodeServlet</servlet-name>
+        <servlet-class>locnt.controller.VerifyCodeServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DispatcherController</servlet-name>
         <url-pattern>/DispatcherController</url-pattern>
@@ -103,6 +111,14 @@
     <servlet-mapping>
         <servlet-name>DeleteBookingServlet</servlet-name>
         <url-pattern>/DeleteBookingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserVerifyServlet</servlet-name>
+        <url-pattern>/UserVerifyServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VerifyCodeServlet</servlet-name>
+        <url-pattern>/VerifyCodeServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

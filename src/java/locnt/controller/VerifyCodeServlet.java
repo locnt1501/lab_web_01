@@ -7,25 +7,21 @@ package locnt.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-import java.util.List;
-import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import locnt.booking.BookingDAO;
-import locnt.dtos.BookingDTO;
-import locnt.dtos.BookingRequestProcessDTO;
-import locnt.resource.ResourceDAO;
+import javax.servlet.http.HttpSession;
+import locnt.dtos.EmailDTO;
 
 /**
  *
  * @author LocPC
  */
-public class SearchBookingServlet extends HttpServlet {
+public class VerifyCodeServlet extends HttpServlet {
 
-    private final String MANAGE_PROCESS_PAGE = "manageProcess.jsp";
+    private final String FAIL = "verify.jsp";
+    private final String SUCCESS = "login.jsp";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -40,42 +36,21 @@ public class SearchBookingServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String url = MANAGE_PROCESS_PAGE;
-
+        String url = FAIL;
         try {
-            int status = 0;
-            String valueDropDownList = request.getParameter("ddList");
-            String page = request.getParameter("page");
-            String value = request.getParameter("txtValue");
-            int totalResult = 0;
-
-            if (valueDropDownList.equals("new")) {
-                status = 1;
-            } else if (valueDropDownList.equals("delete")) {
-                status = 3;
+            HttpSession session = request.getSession();
+            EmailDTO dto = (EmailDTO) session.getAttribute("AUTHCODE");
+            String code = request.getParameter("authcode");
+            if (code.equals(dto.getCode())) {
+                url = SUCCESS;
             } else {
-                status = 2;
-            }
-            int pageNum = 1;
-            if (page != null) {
-                pageNum = Integer.parseInt(page);
-            }
-            BookingDAO dao = new BookingDAO();
-            dao.searchBooking(value, status, pageNum);
-            totalResult = dao.searchTotalBooking(value, status);
-            int pages = (int) Math.ceil((double) totalResult / BookingDAO.ROW_PER_PAGE);
-            request.setAttribute("PAGES", pages);
-            request.setAttribute("ROW_PER_PAGE", ResourceDAO.ROW_PER_PAGE);
+                request.setAttribute("ERRORVERIFY", "Verify Error");
+                url = FAIL;
 
-            List<BookingRequestProcessDTO> listBooking = dao.getListBooking();
-            request.setAttribute("LISTBOOKINGSEARCH", listBooking);
-            url = MANAGE_PROCESS_PAGE;
-        } catch (SQLException ex) {
-            log("SearchBookingServlet_SQL " + ex.getMessage());
-        } catch (NamingException ex) {
-            log("SearchBookingServlet_Naming " + ex.getMessage());
+            }
+
         } finally {
-            request.getRequestDispatcher(url).forward(request, response);
+            response.sendRedirect(url);
             out.close();
         }
     }

@@ -54,9 +54,9 @@ public class DeleteBookingServlet extends HttpServlet {
                         + "&btAction=SearchHistory";
             }
         } catch (NamingException ex) {
-            log("DeleteBookingServlet");
+            log("DeleteBookingServlet_Naming " + ex.getMessage());
         } catch (SQLException ex) {
-            Logger.getLogger(DeleteBookingServlet.class.getName()).log(Level.SEVERE, null, ex);
+            log("DeleteBookingServlet_SQL " + ex.getMessage());
         } finally {
             response.sendRedirect(url);
             out.close();

@@ -14,9 +14,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import locnt.account.AccountCreateError;
 import locnt.account.AccountDAO;
 import locnt.dtos.AccountDTO;
+import locnt.dtos.EmailDTO;
+import locnt.email.EmailDAO;
 
 /**
  *
@@ -24,8 +27,10 @@ import locnt.dtos.AccountDTO;
  */
 public class CreateNewAccountServlet extends HttpServlet {
 
-    private final String SUCCESS = "login.jsp";
+    private final String SUCCESS = "verify.jsp";
     private final String FAIL = "createNewAccount.jsp";
+    private final int STATUS_NEW = 1;
+    private final int STATUS_ACTIVED = 2;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -47,7 +52,6 @@ public class CreateNewAccountServlet extends HttpServlet {
         int phone = Integer.parseInt(request.getParameter("txtPhoneNumber"));
         String address = request.getParameter("txtAddress");
         int role = 3; //employee
-        int status = 1;
         String url = FAIL;
 
         AccountCreateError errors = new AccountCreateError();
@@ -62,12 +66,25 @@ public class CreateNewAccountServlet extends HttpServlet {
             if (foundErr) {
                 request.setAttribute("CREATEERROR", errors);
             } else {
-                Date dateNow = new Date(System.currentTimeMillis() - 24*60*60*1000);
-                AccountDTO dto = new AccountDTO(email, password, name, address, phone, dateNow, role, status);
+                Date dateNow = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+                AccountDTO dto = new AccountDTO(email, password, name, address, phone, dateNow, role, STATUS_NEW);
                 AccountDAO dao = new AccountDAO();
                 boolean result = dao.createAccount(dto);
                 if (result) {
-                    url = SUCCESS;
+                    EmailDAO emailDAO = new EmailDAO();
+                    String code = emailDAO.getRandom();
+                    EmailDTO emailDTO = new EmailDTO(name, email, code);
+                    boolean test = emailDAO.sendEmail(emailDTO);
+                    if (test) {
+                        HttpSession session = request.getSession();
+                        session.setAttribute("AUTHCODE", emailDTO);
+                        boolean resultUpdate = dao.updateStatusAccount(email, STATUS_ACTIVED);
+                        if (resultUpdate) {
+                            url = SUCCESS;
+                        }
+                    } else {
+                        url = FAIL;
+                    }
                 } else {
                     url = FAIL;
                 }

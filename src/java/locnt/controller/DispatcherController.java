@@ -33,6 +33,7 @@ public class DispatcherController extends HttpServlet {
     private final String UPDATE_BOOKING_SERVLET = "UpdateBookingServlet";
     private final String SHOW_HISTORY_BOOKING_SERVLET = "ShowHistoryBookingServlet";
     private final String DELETE_BOOKING_SERVLET = "DeleteBookingServlet";
+    private final String VERIFY_CODE_SERVLET = "VerifyCodeServlet";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -57,6 +58,8 @@ public class DispatcherController extends HttpServlet {
                 url = SEARCH_RESOURCE_SERVLET;
             } else if (button.equals("Create New Account")) {
                 url = CREATE_NEW_ACCOUNT;
+            } else if (button.equals("Verify")) {
+                url = VERIFY_CODE_SERVLET;
             } else {
                 if (user != null) {
                     if (user.getRoleId() == 1) { // role manager

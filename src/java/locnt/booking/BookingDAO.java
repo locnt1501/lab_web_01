@@ -16,6 +16,7 @@ import java.util.List;
 import javax.naming.NamingException;
 import locnt.dtos.BookingDTO;
 import locnt.dtos.BookingHistoryDTO;
+import locnt.dtos.BookingRequestProcessDTO;
 import locnt.dtos.ResourceDTO;
 import locnt.utils.DBUtils;
 
@@ -26,14 +27,14 @@ import locnt.utils.DBUtils;
 public class BookingDAO implements Serializable {
 
     public static final int ROW_PER_PAGE = 20;
-    private List<BookingDTO> listBooking;
+    private List<BookingRequestProcessDTO> listBooking;
     private List<BookingHistoryDTO> listBookingHistory;
 
     public List<BookingHistoryDTO> getListBookingHistory() {
         return listBookingHistory;
     }
 
-    public List<BookingDTO> getListBooking() {
+    public List<BookingRequestProcessDTO> getListBooking() {
         return listBooking;
     }
 
@@ -79,8 +80,10 @@ public class BookingDAO implements Serializable {
         try {
             con = DBUtils.makeConnect();
             if (con != null) {
-                String sql = "SELECT BookingId, DateCreate, DateBookingFrom, DateBookingTo, StatusId, Email "
-                        + "FROM Booking WHERE StatusId= ? and Email = ? "
+                String sql = "SELECT b.BookingId, b.DateCreate, b.DateBookingFrom, DateBookingTo, b.StatusId, b.Email, r.ItemName "
+                        + "FROM Booking b, BookingDetail bd, Resource r "
+                        + "WHERE b.BookingId = bd.BookingId and bd.ResourceId = r.ResourceId "
+                        + "and b.StatusId= ? and b.Email = ? "
                         + "ORDER BY DateCreate "
                         + "OFFSET ? ROWS "
                         + "FETCH NEXT ? ROWS ONLY";
@@ -97,10 +100,11 @@ public class BookingDAO implements Serializable {
                     Date dateTo = rs.getDate("DateBookingTo");
                     int statusID = rs.getInt("StatusId");
                     String emailDB = rs.getString("Email");
-
-                    BookingDTO dto = new BookingDTO(bookingId, dateCreate, dateFrom, dateTo, statusID, emailDB);
+                    String itemName = rs.getString("ItemName");
+                    BookingRequestProcessDTO dto = new BookingRequestProcessDTO(bookingId, dateCreate, 
+                            dateFrom, dateTo, statusID, emailDB, itemName);
                     if (this.listBooking == null) {
-                        this.listBooking = new ArrayList<BookingDTO>();
+                        this.listBooking = new ArrayList<BookingRequestProcessDTO>();
                     }
                     this.listBooking.add(dto);
                 }
