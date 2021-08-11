@@ -29,7 +29,7 @@ public class UpdateBookingServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         String url = MANAGE_PROCESS_PAGE;
         try {
-            int status = Integer.parseInt(request.getParameter("status"));
+            int status = Integer.parseInt(request.getParameter("valueStatus"));
             int bookingid = Integer.parseInt(request.getParameter("txtBookingId"));
             // parameter urlrewiting
             String statusString = request.getParameter("ddList");

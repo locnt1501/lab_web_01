@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -45,9 +44,9 @@ public class CreateNewAccountServlet extends HttpServlet {
         String password = request.getParameter("txtPassword");
         String repeatPassword = request.getParameter("txtRepeatPassword");
         String name = request.getParameter("txtName");
-        String phone = request.getParameter("txtPhoneNumber");
+        int phone = Integer.parseInt(request.getParameter("txtPhoneNumber"));
         String address = request.getParameter("txtAddress");
-        int role = 1;
+        int role = 3; //employee
         int status = 1;
         String url = FAIL;
 
@@ -64,7 +63,7 @@ public class CreateNewAccountServlet extends HttpServlet {
                 request.setAttribute("CREATEERROR", errors);
             } else {
                 Date dateNow = new Date(System.currentTimeMillis() - 24*60*60*1000);
-                AccountDTO dto = new AccountDTO(email, password, name, address, role, dateNow, role, status);
+                AccountDTO dto = new AccountDTO(email, password, name, address, phone, dateNow, role, status);
                 AccountDAO dao = new AccountDAO();
                 boolean result = dao.createAccount(dto);
                 if (result) {

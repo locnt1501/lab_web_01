@@ -22,6 +22,7 @@ import locnt.utils.DBUtils;
  * @author LocPC
  */
 public class ResourceDAO implements Serializable {
+    public static final int ROW_PER_PAGE = 20;
 
     public List<ResourceDTO> listSearch;
 
@@ -29,7 +30,7 @@ public class ResourceDAO implements Serializable {
         return listSearch;
     }
 
-    public void searchResource(String catelory, String name, Date dateFrom, Date dateTo) throws SQLException, NamingException {
+    public void searchResource(String catelory, String name, Date dateFrom, Date dateTo, int page) throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -37,15 +38,17 @@ public class ResourceDAO implements Serializable {
             con = DBUtils.makeConnect();
             if (con != null) {
                 String sql = "SELECT ResourceId, ItemName, Category, Quantity, Color, HighestOfRole, StatusId, DateFrom, DateTo "
-                        + "FROM ( SELECT ROW_NUMBER() OVER ( ORDER BY Category ) AS RowNum, ResourceId, ItemName, Category, Quantity, Color, HighestOfRole, StatusId, DateFrom, DateTo "
-                        + "FROM Resource "
-                        + "WHERE Category = ? and ItemName = ? AND DateFrom between ? AND ?) AS RowConstrainedResult "
-                        + "WHERE RowNum >= 1 AND RowNum < 10 ORDER BY RowNum";
+                        + "FROM Resource WHERE Category = ? and ItemName = ? AND DateFrom between ? AND ? "
+                        + "ORDER BY ItemName "
+                        + "OFFSET ? ROWS "
+                        + "FETCH NEXT ? ROWS ONLY";
                 stm = con.prepareStatement(sql);
                 stm.setString(1, catelory);
                 stm.setString(2, name);
                 stm.setDate(3, dateFrom);
                 stm.setDate(4, dateTo);
+                stm.setInt(5, (page - 1) * ROW_PER_PAGE);
+                stm.setInt(6, ROW_PER_PAGE);
                 rs = stm.executeQuery();
                 while (rs.next()) {
                     int resourceId = rs.getInt("ResourceId");

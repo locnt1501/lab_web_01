@@ -9,7 +9,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -30,7 +34,8 @@ import locnt.resource.ResourceDAO;
 public class CheckoutServlet extends HttpServlet {
 
     private final String SUCCESS = "search.jsp";
-    private final String FAIL = "invalid.html";
+    private final String FAIL = "viewCart.jsp";
+    
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -51,25 +56,55 @@ public class CheckoutServlet extends HttpServlet {
             HttpSession session = request.getSession();
             AccountDTO dto = (AccountDTO) session.getAttribute("USER");
             HashMap<Integer, CartDTO> listResourceCart = (HashMap<Integer, CartDTO>) session.getAttribute("CART");
-            Date dateNow = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
-            int bookingId = dao.checkoutBookingReturnBookingID(dateNow, dateNow, dateNow, 1, dto.getEmail());
+            String dateFromString = request.getParameter("txtDateFrom");
+            String dateToString = request.getParameter("txtDateTo");
+            Date dateFrom;
+            Date dateTo;
+            Date dateNow = null;
+            boolean validate = true;
 
-            ResourceDAO resourceDAO = new ResourceDAO();
-
-            if (bookingId > 0) {
-                BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
-                for (CartDTO element : listResourceCart.values()) {
-                    bookingDetailDAO.insertIntoBookingDetail(element.getQuantity(), bookingId, element.getResourceId());
-                    ResourceDTO resourceDTO = resourceDAO.searchResourceById(element.getResourceId());
-                    resourceDAO.updateQuantity(resourceDTO.getQuantity() - element.getQuantity(), element.getResourceId());
+            if (!dateFromString.isEmpty() && !dateToString.isEmpty()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                dateFrom = new Date(sdf.parse(dateFromString).getTime());
+                dateTo = new Date(sdf.parse(dateToString).getTime());
+                dateNow = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
+                if (!dateFrom.after(dateNow)) {
+                    validate = false;
+                    request.setAttribute("ERRORCHECKOUT", "Date From must after current date");
                 }
+                if (!dateTo.after(dateFrom)) {
+                    validate = false;
+                    request.setAttribute("ERRORCHECKOUT", "Date To must after Date From");
+                }
+            } else {
+                dateFrom = null;
+                dateTo = null;
+                validate = false;
+                request.setAttribute("ERRORCHECKOUT", "Please choose full field Date From and Date To");
             }
-            url = SUCCESS;
-            session.removeAttribute("CART");
+
+            if (validate) {
+                
+                int bookingId = dao.checkoutBookingReturnBookingID(dateNow, dateFrom, dateTo, 1, dto.getEmail());
+                ResourceDAO resourceDAO = new ResourceDAO();
+
+                if (bookingId > 0) {
+                    BookingDetailDAO bookingDetailDAO = new BookingDetailDAO();
+                    for (CartDTO element : listResourceCart.values()) {
+                        bookingDetailDAO.insertIntoBookingDetail(element.getQuantity(), bookingId, element.getResourceId());
+                        ResourceDTO resourceDTO = resourceDAO.searchResourceById(element.getResourceId());
+                        resourceDAO.updateQuantity(resourceDTO.getQuantity() - element.getQuantity(), element.getResourceId());
+                    }
+                }
+                url = SUCCESS;
+                session.removeAttribute("CART");
+            }
         } catch (SQLException ex) {
             log("CheckoutServlet_SQL " + ex.getMessage());
         } catch (NamingException ex) {
             log("CheckoutNaming_Naming " + ex.getMessage());
+        } catch (ParseException ex) {
+            Logger.getLogger(CheckoutServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
             out.close();

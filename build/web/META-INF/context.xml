@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/J3.L.P0016">
-<!--    <Resource name="ResourceSharingDB" type="javax.sql.DataSource" 
-              auth="Container" driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" 
-              url="jdbc:sqlserver://localhost:1433;databaseName=ResourceSharing" 
-              username="sa" password="150199" />-->
+    <!--    <Resource name="ResourceSharingDB" type="javax.sql.DataSource" 
+    auth="Container" driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" 
+    url="jdbc:sqlserver://localhost:1433;databaseName=ResourceSharing" 
+    username="sa" password="150199" />-->
     <Resource name="ResourceSharingDB" type="javax.sql.DataSource" 
               auth="Container" driverClassName="com.microsoft.sqlserver.jdbc.SQLServerDriver" 
               url="jdbc:sqlserver://resourcesharing.cmi5x0wj5lza.ap-southeast-1.rds.amazonaws.com:1433;databaseName=ResourceSharing" 

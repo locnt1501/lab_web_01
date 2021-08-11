@@ -25,6 +25,7 @@ import locnt.utils.DBUtils;
  */
 public class BookingDAO implements Serializable {
 
+    public static final int ROW_PER_PAGE = 20;
     private List<BookingDTO> listBooking;
     private List<BookingHistoryDTO> listBookingHistory;
 
@@ -71,7 +72,7 @@ public class BookingDAO implements Serializable {
         return -1;
     }
 
-    public void searchBooking(String email, int status) throws SQLException, NamingException {
+    public void searchBooking(String email, int status, int page) throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
@@ -79,11 +80,15 @@ public class BookingDAO implements Serializable {
             con = DBUtils.makeConnect();
             if (con != null) {
                 String sql = "SELECT BookingId, DateCreate, DateBookingFrom, DateBookingTo, StatusId, Email "
-                        + "FROM Booking "
-                        + "WHERE StatusId= ? and Email = ?";
+                        + "FROM Booking WHERE StatusId= ? and Email = ? "
+                        + "ORDER BY DateCreate "
+                        + "OFFSET ? ROWS "
+                        + "FETCH NEXT ? ROWS ONLY";
                 stm = con.prepareStatement(sql);
                 stm.setInt(1, status);
                 stm.setString(2, email);
+                stm.setInt(3, (page - 1) * ROW_PER_PAGE);
+                stm.setInt(4, ROW_PER_PAGE);
                 rs = stm.executeQuery();
                 while (rs.next()) {
                     int bookingId = rs.getInt("BookingId");
@@ -177,5 +182,39 @@ public class BookingDAO implements Serializable {
                 con.close();
             }
         }
+    }
+
+    public int searchTotalBooking(String email, int statusId) throws NamingException, SQLException {
+        Connection con = null;
+        PreparedStatement stm = null;
+        ResultSet rs = null;
+        int count = 0;
+        try {
+            con = DBUtils.makeConnect();
+            if (con != null) {
+                String sql = "SELECT ROW_NUMBER() OVER ( ORDER BY DateCreate ) AS RowNum, DateCreate, DateBookingFrom, DateBookingTo, StatusId, Email "
+                        + "FROM Booking "
+                        + "WHERE Email = ? and StatusId = ?";
+                stm = con.prepareStatement(sql);
+                stm.setString(1, email);
+                stm.setInt(2, statusId);
+                rs = stm.executeQuery();
+                while (rs.next()) {
+                    count++;
+                }
+                return count;
+            }
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+            if (stm != null) {
+                stm.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+        return 0;
     }
 }

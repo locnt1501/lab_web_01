@@ -17,7 +17,6 @@
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" />
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-        <link href="homeStyle.css" rel="stylesheet">
     </head>
     <body>
         <form action="DispatcherController">
@@ -66,13 +65,34 @@
                                     <td>
                                         ${type.value.quantity}
                                     </td>
+
                                     <td>
                                         <input type="checkbox" name="chkItem" value="${type.key}"/>
                                     </td>
                                 </tr>
 
                             </c:forEach>
+                            <c:set var="error" value="${requestScope.ERRORCHECKOUT}" />
+
                             <tr>
+                            <div class="row">
+                                <div class="form-group col-6">
+                                    <label  style="color: black">Date From</label>
+                                    <input class="form-control" placeholder="Date From" type="date" name="txtDateFrom" value="${param.txtDateFrom}">
+                                </div>
+                                <div class="form-group col-6">
+                                    <label style="color: black">Date To</label>
+                                    <input class="form-control" placeholder="Date To" type="date" name="txtDateTo" value="${param.txtDateTo}">
+                                </div>
+                            </div>
+                            <c:if test="${not empty error}">
+                                <font color="red">
+                                ${error}
+                                </font>
+                            </c:if>
+                            </tr>
+                            <tr>
+
                                 <td>
                                     <input type="submit" value="Remove Items" name="btAction" />
                                 </td>

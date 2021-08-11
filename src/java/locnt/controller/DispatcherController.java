@@ -21,6 +21,7 @@ import locnt.dtos.AccountDTO;
 public class DispatcherController extends HttpServlet {
 
     private final String INVALID_PAGE = "invalid.html";
+    private final String ERROR_PAGE = "errors.html";
     private final String LOGIN_PAGE = "login.jsp";
     private final String LOGIN_SERVLET = "LoginServlet";
     private final String LOGOUT_SERVLET = "LogoutServlet";
@@ -37,7 +38,7 @@ public class DispatcherController extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String url = INVALID_PAGE;
+        String url = ERROR_PAGE;
 
         try {
             String button = request.getParameter("btAction");
@@ -52,6 +53,10 @@ public class DispatcherController extends HttpServlet {
                 url = LOGOUT_SERVLET;
             } else if (button.equals("History")) {
                 url = SHOW_HISTORY_BOOKING_SERVLET;
+            } else if (button.equals("Search")) {
+                url = SEARCH_RESOURCE_SERVLET;
+            } else if (button.equals("Create New Account")) {
+                url = CREATE_NEW_ACCOUNT;
             } else {
                 if (user != null) {
                     if (user.getRoleId() == 1) { // role manager
@@ -63,11 +68,7 @@ public class DispatcherController extends HttpServlet {
                     } else if (user.getRoleId() == 2) {// role leader
 
                     } else { // role employee
-                        if (button.equals("Search")) {
-                            url = SEARCH_RESOURCE_SERVLET;
-                        } else if (button.equals("Create New Account")) {
-                            url = CREATE_NEW_ACCOUNT;
-                        } else if (button.equals("Add to cart")) {
+                        if (button.equals("Add to cart")) {
                             url = ADD_ITEM_TO_CART_SERVLET;
                         } else if (button.equals("Remove Items")) {
                             url = REMOVE_ITEMS_SERVLET;

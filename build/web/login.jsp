@@ -80,9 +80,10 @@
 
                 <div class="g-recaptcha" style="margin-left: 50px; margin-bottom: 10px"
                      data-sitekey="6LfIbu0bAAAAAFpNAkSoF7cnGb2dsRKBsf588I9d"></div></br>
-                <c:if test="${not empty errors.emailOrPasswordIncorrect}">
+                <c:if test="${not empty errors}">
                     <font color="red">
                     ${errors.emailOrPasswordIncorrect}
+                    ${errors.reCAPTCHANotChecked}
                     </font>
                 </c:if></br>
 

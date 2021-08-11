@@ -12,8 +12,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,14 +47,16 @@ public class SearchResourceServlet extends HttpServlet {
             String name = request.getParameter("txtName");
             String dateFromString = request.getParameter("txtDateFrom");
             String dateToString = request.getParameter("txtDateTo");
+            String page = request.getParameter("page");
 
             Date dateFrom;
             Date dateTo;
             boolean validate = true;
-            int pageIndex = 0;
-            int start = 1;
-            int end = 20;
-
+            int pageNum = 1;
+            if (page != null) {
+                pageNum = Integer.parseInt(page);
+            }
+            int totalResult = 0;
             if (!dateFromString.isEmpty() && !dateToString.isEmpty()) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 dateFrom = new Date(sdf.parse(dateFromString).getTime());
@@ -75,9 +75,13 @@ public class SearchResourceServlet extends HttpServlet {
             }
             if (validate) {
                 ResourceDAO dao = new ResourceDAO();
-                dao.searchResource(category, name, dateFrom, dateTo);
+                dao.searchResource(category, name, dateFrom, dateTo, pageNum);
+                totalResult = dao.totoalRecordSearch(category, name, dateFrom, dateTo);
                 List<ResourceDTO> listSearch = dao.getListSearch();
                 request.setAttribute("SEARCHRESULT", listSearch);
+                int pages = (int) Math.ceil((double) totalResult / ResourceDAO.ROW_PER_PAGE);
+                request.setAttribute("PAGES", pages);
+                request.setAttribute("ROW_PER_PAGE", ResourceDAO.ROW_PER_PAGE);
                 url = SEARCH_PAGE;
             }
 

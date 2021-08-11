@@ -56,15 +56,16 @@ public class LoginServlet extends HttpServlet {
                 foundErr = true;
                 errors.setEmailOrPasswordIncorrect("email or password incorrect!!!");
             }
-            if (verify == false) {
-                foundErr = true;
-                errors.setReCAPTCHANotChecked("reCAPTCHA not checked!!!");
-            }
+//            if (verify == false) {
+//                foundErr = true;
+//                errors.setReCAPTCHANotChecked("reCAPTCHA not checked!!!");
+//            }
             if (foundErr) {
                 request.setAttribute("LOGINERROR", errors);
                 url = LOGIN_PAGE;
             } else {
-                if (result && verify) {
+                if (result) {
+//                     && verify
                     AccountDTO dto = dao.getInformation(email);
                     HttpSession session = request.getSession();
                     session.setAttribute("USER", dto);

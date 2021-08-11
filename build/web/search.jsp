@@ -9,40 +9,41 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Home User Page</title>
+        <title>Search Resource Page</title>
         <meta charset="utf-8">
         <meta name="robots" content="noindex, nofollow">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <link href="homeStyle.css" rel="stylesheet">
     </head>
     <body>
-        <form action="DispatcherController">
+        <div>
             <nav class="navbar navbar-expand-sm navbar-dark ">
                 <h2 class="navbar-brand display-4" style="color: black"> Welcome ${sessionScope.USER.name}</h2>
                 <div class="collapse navbar-collapse">
-                    <ul class="navbar-nav ml-auto">
-                        <c:set var="user" value="${sessionScope.USER}"/>
-                        <c:if test="${empty user}">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="loginPage">Login</a>
-                            </li>
-                        </c:if>
+                    <form action="DispatcherController">
+                        <ul class="navbar-nav ml-auto">
+                            <c:set var="user" value="${sessionScope.USER}"/>
+                            <c:if test="${empty user}">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="loginPage">Login</a>
+                                </li>
+                            </c:if>
 
-                        <c:if test="${not empty user}">
-                            <!--<input type="submit" value="View Cart" name="btAction" style="color: black" />-->
-                            <a href="viewCart.jsp" style="margin-right: 20px">View Cart</a>
-                            <input type="submit" value="History" name="btAction" />
-                            <input type="submit" value="Logout" name="btAction" style="color: black" />
-                        </c:if>
-                    </ul>
+                            <c:if test="${not empty user}">
+                                <!--<input type="submit" value="View Cart" name="btAction" style="color: black" />-->
+                                <a href="viewCart.jsp" style="margin-right: 20px">View Cart</a>
+                                <input type="submit" value="History" name="btAction" />
+                                <input type="submit" value="Logout" name="btAction" style="color: black" />
+                            </c:if>
+                        </ul>
+                    </form>
                 </div>
             </nav>
             <div class="jumbotron row" style="position: relative;">
                 <div class="col-6 text-center">
-                    <h1 class="display-2">Resource Manage!</h1>
+                    <h1 class="display-2">Search Resource!</h1>
                 </div>
                 <form class="col-6" action="DispatcherController" >
                     <div class="row justify-content-center">
@@ -75,7 +76,7 @@
                     </div> <!-- row.// -->
                 </form>
             </div>
-        </form> 
+        </div> 
         <c:set var="listResourceSearch" value="${requestScope.SEARCHRESULT}"/>
         <c:if test="${not empty listResourceSearch}">
             <table border="1">
@@ -90,10 +91,12 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <c:set var="page" value="${(not empty param.page) ? param.page : 1}" />
+                    <c:set var="rowPerPage" value="${requestScope.ROWS_PER_PAGE}"/>
                     <c:forEach var="dto" items="${listResourceSearch}" varStatus="counter">
                     <form>
                         <tr>
-                            <td>${counter.count}</td>
+                            <td>${(page - 1) * rowPerPage + counter.count}</td>
                             <td>
                                 ${dto.itemName}
                                 <input type="hidden" name="txtItemName" value="${dto.itemName}" />
@@ -123,24 +126,22 @@
                 </c:forEach>
             </tbody>
         </table>
+        <c:set var="pages" value="${requestScope.PAGES}" />
         <nav style="margin-top: 20px; background-color: white;"> <!--Paging-->
             <ul class="pagination justify-content-center">
-                <c:set var="lastPage" value="${requestScope.lastPage}"/>
-                <c:forEach var="page" begin="1" end="${lastPage}">
-                    <c:url var="pageReWriting" value="search">
-                        <c:param name="txtAddress" value="${param.indexPage}"/>
-                        <c:param name="txtDateFrom" value="${param.txtDateFrom}"/>
-                        <c:param name="txtDateTo" value="${param.txtDateTo}"/>
-                        <c:param name="indexPage" value="${page}"/>
-                    </c:url>
-                    <li class="page-item <c:if test="${param.indexPage == page}">
-                        active
-                        </c:if>
-                        <c:if test="${empty param.indexPage and page == 1}">
-                            active
-                        </c:if>
-                        "><a href="${pageReWriting}" class="page-link">${page}</a></li>
-                    </c:forEach>
+                <c:forEach var="i" begin="1" end="${pages}">
+                    <li class="page-item <c:if test="${i == page}">active</c:if>">
+                        <c:url var="urlRewritingPaging" value="DispatcherController">
+                            <c:param name="txtCategory" value="${param.txtCategory}"/>
+                            <c:param name="txtName" value="${param.txtName}"/>
+                            <c:param name="txtDateFrom" value="${param.txtDateFrom}"/>
+                            <c:param name="txtDateTo" value="${param.txtDateTo}"/>
+                            <c:param name="btAction" value="Search"/>
+                            <c:param name="page" value="${i}"/>
+                        </c:url>
+                        <a href="${urlRewritingPaging}" class="page-link">${i}</a></li>
+                    </li>
+                </c:forEach>
             </ul>
         </nav> <!--Paging-->
     </c:if>

@@ -15,7 +15,7 @@
         <title>Manage Process Page</title>
     </head>
     <body>
-        <form action="DispatcherController">
+        <div>
             <nav class="navbar navbar-expand-sm navbar-dark ">
                 <h2 class="navbar-brand display-4" style="color: black"> Welcome ${sessionScope.USER.name}</h2>
                 <div class="collapse navbar-collapse">
@@ -84,7 +84,7 @@
                                         ${dto.getEmail()}
                                     </td>
                                     <td>
-                                        <select name="status">
+                                        <select name="valueStatus">
                                             <option value="1" ${dto.getStatusId() == 1 ? 'selected="selected"' : ''}>New</option>
                                             <option value="2" ${dto.getStatusId() == 2 ? 'selected="selected"' : ''}>Accept</option>
                                             <option value="3" ${dto.getStatusId() == 3 ? 'selected="selected"' : ''}>Delete</option>
@@ -92,6 +92,8 @@
                                     </td>
                                     <td>
                                         <input type="hidden" name="txtBookingId" value="${dto.getBookingId()}" />
+                                        <input type="hidden" name="txtValue" value="${param.txtValue}" />
+                                        <input type="hidden" name="ddList" value="${param.ddList}" />
                                         <input type="submit" value="Update" name="btAction" />
                                     </td>
                                 </tr>
@@ -99,11 +101,30 @@
                         </tbody>
                     </table>
                 </form>
+                <c:set var="pages" value="${requestScope.PAGES}" />
+                <nav style="margin-top: 20px; background-color: white;"> <!--Paging-->
+                    <ul class="pagination justify-content-center">
+                        <c:forEach var="i" begin="1" end="${pages}">
+                            <li class="page-item <c:if test="${i == page}">active</c:if>">
+                                <c:url var="urlRewritingPaging" value="DispatcherController">
+                                    <c:param name="txtValue" value="${param.txtValue}"/>
+                                    <c:param name="ddList" value="${param.ddList}"/>
+                                    <c:param name="txtDateFrom" value="${param.txtDateFrom}"/>
+                                    <c:param name="txtDateTo" value="${param.txtDateTo}"/>
+                                    <c:param name="btAction" value="SearchBooking"/>
+                                    <c:param name="page" value="${i}"/>
+                                </c:url>
+                                <a href="${urlRewritingPaging}" class="page-link">${i}</a></li>
+                            </li>
+                        </c:forEach>
+                    </ul>
+                </nav> <!--Paging-->
+
             </c:if>
             <c:if test="${empty listSearchBooking}">
                 <h4 class="alert alert-danger container">No Result</h4> 
             </c:if>
-        </form>
+        </div>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
                 integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
         crossorigin="anonymous"></script>

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import locnt.booking.BookingDAO;
 import locnt.dtos.BookingDTO;
+import locnt.resource.ResourceDAO;
 
 /**
  *
@@ -39,9 +40,14 @@ public class SearchBookingServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         String url = MANAGE_PROCESS_PAGE;
+
         try {
             int status = 0;
             String valueDropDownList = request.getParameter("ddList");
+            String page = request.getParameter("page");
+            String value = request.getParameter("txtValue");
+            int totalResult = 0;
+
             if (valueDropDownList.equals("new")) {
                 status = 1;
             } else if (valueDropDownList.equals("delete")) {
@@ -49,9 +55,17 @@ public class SearchBookingServlet extends HttpServlet {
             } else {
                 status = 2;
             }
-            String value = request.getParameter("txtValue");
+            int pageNum = 1;
+            if (page != null) {
+                pageNum = Integer.parseInt(page);
+            }
             BookingDAO dao = new BookingDAO();
-            dao.searchBooking(value, status);
+            dao.searchBooking(value, status, pageNum);
+            totalResult = dao.searchTotalBooking(value, status);
+            int pages = (int) Math.ceil((double) totalResult / BookingDAO.ROW_PER_PAGE);
+            request.setAttribute("PAGES", pages);
+            request.setAttribute("ROW_PER_PAGE", ResourceDAO.ROW_PER_PAGE);
+
             List<BookingDTO> listBooking = dao.getListBooking();
             request.setAttribute("LISTBOOKINGSEARCH", listBooking);
             url = MANAGE_PROCESS_PAGE;
