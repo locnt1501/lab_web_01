@@ -34,6 +34,7 @@
                 </form>
             </div>
         </nav>
+        <a href="search.jsp">Back</a>
         <form action="DispatcherController">
             <div class="row">
                 <div class="form-group col-6">
@@ -46,7 +47,6 @@
             </div> 
         </form>
         <c:set var="listBookingHistory" value="${sessionScope.LISTBOOKINGHISTORY}" />
-        <a href="search.jsp">Back</a>
         <c:if test="${not empty listBookingHistory}">
             <table border="1">
                 <thead>

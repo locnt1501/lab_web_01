@@ -22,7 +22,7 @@
             <nav class="navbar navbar-expand-sm navbar-dark ">
                 <h2 class="navbar-brand display-4" style="color: black"> Welcome ${sessionScope.USER.name}</h2>
                 <div class="collapse navbar-collapse">
-                    <form action="DispatcherController">
+                    <form action="DispatcherController" >
                         <ul class="navbar-nav ml-auto">
                             <c:set var="user" value="${sessionScope.USER}"/>
                             <c:if test="${empty user}">
@@ -42,6 +42,9 @@
                     </form>
                 </div>
             </nav>
+            <c:if test="${user.roleId == 1}">
+                <a href="manageProcess.jsp">Back</a>
+            </c:if>
             <div class="jumbotron row" style="position: relative;">
                 <div class="col-6 text-center">
                     <h1 class="display-2">Search Resource!</h1>

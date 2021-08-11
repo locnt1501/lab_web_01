@@ -54,6 +54,7 @@ public class LoginServlet extends HttpServlet {
             boolean verify = VerifyRecaptcha.verify(gRecaptchResponse);
             AccountDAO dao = new AccountDAO();
             boolean result = dao.checkLogin(email, password);
+            AccountDTO dto = dao.getInformation(email);
             boolean foundErr = false;
             AccountLoginError errors = new AccountLoginError();
             if (result == false) {
@@ -68,8 +69,7 @@ public class LoginServlet extends HttpServlet {
                 request.setAttribute("LOGINERROR", errors);
                 url = LOGIN_PAGE;
             } else {
-                if (result && verify) {
-                    AccountDTO dto = dao.getInformation(email);
+                if (result && verify && dto.getStatusId() == 2) {
                     HttpSession session = request.getSession();
                     session.setAttribute("USER", dto);
                     if (dto.getRoleId() == ROLE_MANAGER) { //role manager
