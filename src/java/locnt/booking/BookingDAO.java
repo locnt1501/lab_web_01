@@ -145,26 +145,28 @@ public class BookingDAO implements Serializable {
         return false;
     }
 
-    public void getHistoryBooking(String email) throws SQLException, NamingException {
+    public void getHistoryBooking(String email, Date dateCreate) throws SQLException, NamingException {
         Connection con = null;
         PreparedStatement stm = null;
         ResultSet rs = null;
         try {
             con = DBUtils.makeConnect();
             if (con != null) {
-                String sql = "SELECT r.ItemName, r.Category, b.DateCreate, s.Name "
+                String sql = "SELECT r.ItemName, r.Category, b.DateCreate, s.Name, b.BookingId "
                         + "FROM BookingDetail bd, Booking b, Resource r, Status s "
                         + "WHERE bd.ResourceId = r.ResourceId and bd.BookingId = b.BookingId "
-                        + "and b.StatusId = s.StatusId and b.Email = ?";
+                        + "and b.StatusId = s.StatusId and b.Email = ? and b.DateCreate < ? ORDER BY b.DateCreate";
                 stm = con.prepareStatement(sql);
                 stm.setString(1, email);
+                stm.setDate(2, dateCreate);
                 rs = stm.executeQuery();
                 while (rs.next()) {
+                    int bookingId = rs.getInt("BookingId");
                     String itemName = rs.getString("ItemName");
                     String category = rs.getString("Category");
-                    Date dateCreate = rs.getDate("DateCreate");
+                    Date dateCreateDB = rs.getDate("DateCreate");
                     String status = rs.getString("Name");
-                    BookingHistoryDTO dto = new BookingHistoryDTO(itemName, category, dateCreate, status);
+                    BookingHistoryDTO dto = new BookingHistoryDTO(bookingId,itemName, category, dateCreateDB, status);
                     if (listBookingHistory == null) {
                         this.listBookingHistory = new ArrayList<BookingHistoryDTO>();
                     }

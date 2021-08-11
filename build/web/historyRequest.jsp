@@ -34,6 +34,17 @@
                 </form>
             </div>
         </nav>
+        <form action="DispatcherController">
+            <div class="row">
+                <div class="form-group col-6">
+                    <label class="text-light">Date</label>
+                    <input class="form-control" placeholder="Date" type="date" name="txtDate" value="${param.txtDate}">
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="SearchHistory" name="btAction" class="btn btn-dark btn-block display-3" />
+            </div> 
+        </form>
         <c:set var="listBookingHistory" value="${sessionScope.LISTBOOKINGHISTORY}" />
         <a href="search.jsp">Back</a>
         <c:if test="${not empty listBookingHistory}">
@@ -45,11 +56,10 @@
                         <th>Category</th>
                         <th>Date Create</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-
-
                     <c:forEach var="dto" items="${listBookingHistory}" varStatus="counter">
                         <tr>
                             <td>${counter.count}</td>
@@ -57,10 +67,16 @@
                             <td>${dto.category}</td>
                             <td>${dto.createDate}</td>
                             <td>${dto.status}</td>
+                            <td>
+                                <c:url var="urlRewritingPaging" value="DispatcherController">
+                                    <c:param name="txtDate" value="${param.txtDate}"/>
+                                    <c:param name="txtBookingId" value="${dto.bookingId}"/>
+                                    <c:param name="btAction" value="Delete"/>
+                                </c:url>
+                                <a href="${urlRewritingPaging}" class="page-link">Delete</a></li>
+                            </td>
                         </tr>
                     </c:forEach>
-
-
                 </tbody>
             </table>
         </c:if>

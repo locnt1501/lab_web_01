@@ -1,6 +1,5 @@
 package locnt.dtos;
 
-
 import java.io.Serializable;
 import java.sql.Date;
 
@@ -9,12 +8,13 @@ import java.sql.Date;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author LocPC
  */
 public class BookingHistoryDTO implements Serializable {
+
+    private int bookingId;
     private String itemName;
     private String category;
     private Date createDate;
@@ -23,11 +23,20 @@ public class BookingHistoryDTO implements Serializable {
     public BookingHistoryDTO() {
     }
 
-    public BookingHistoryDTO(String itemName, String category, Date createDate, String status) {
+    public BookingHistoryDTO(int bookingId, String itemName, String category, Date createDate, String status) {
+        this.bookingId = bookingId;
         this.itemName = itemName;
         this.category = category;
         this.createDate = createDate;
         this.status = status;
+    }
+
+    public int getBookingId() {
+        return bookingId;
+    }
+
+    public void setBookingId(int bookingId) {
+        this.bookingId = bookingId;
     }
 
     public String getItemName() {
@@ -61,5 +70,5 @@ public class BookingHistoryDTO implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-    
+
 }

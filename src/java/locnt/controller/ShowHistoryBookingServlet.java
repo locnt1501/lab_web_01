@@ -7,72 +7,62 @@ package locnt.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import locnt.dtos.CartDTO;
+import locnt.booking.BookingDAO;
+import locnt.dtos.AccountDTO;
+import locnt.dtos.BookingHistoryDTO;
 
 /**
  *
  * @author LocPC
  */
-public class AddItemToCartServlet extends HttpServlet {
-
-    private final String SEARCH_PAGE = "SearchResourceServlet";
-
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+public class ShowHistoryBookingServlet extends HttpServlet {
+    private final String SUCCESS = "historyRequest.jsp";
+    private final String FAIL = "invalid.html";
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String url = SEARCH_PAGE;
+        String url = FAIL;
         try {
-            String title = request.getParameter("txtItemName");
-            int resourceId = Integer.parseInt(request.getParameter("txtResourceId"));
-            
             HttpSession session = request.getSession();
-            HashMap<Integer, CartDTO> listResourceCart = (HashMap<Integer, CartDTO>) session.getAttribute("CART");
-
-            if (listResourceCart == null) {
-                listResourceCart = new HashMap<>();
-                CartDTO cartDTO = new CartDTO(resourceId, title, 1);
-                listResourceCart.put(resourceId, cartDTO);
-
+            AccountDTO dto = (AccountDTO) session.getAttribute("USER");
+            BookingDAO dao = new BookingDAO();
+            String dateString = request.getParameter("txtDate");
+            Date date;
+            boolean validate = true;
+            if (!dateString.isEmpty()) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                date = new Date(sdf.parse(dateString).getTime());
             } else {
-                if (listResourceCart.containsKey(resourceId)) {
-                    listResourceCart.get(resourceId).setQuantity(listResourceCart.get(resourceId).getQuantity() + 1);
-                } else {
-                    CartDTO cartDTO = new CartDTO(resourceId, title, 1);
-                    listResourceCart.put(resourceId, cartDTO);
-                }
+                date = null;
             }
-            session.setAttribute("CART", listResourceCart);
-            
-            
-            String category = request.getParameter("txtCategory");
-            String name = request.getParameter("txtName");
-            String dateFromString = request.getParameter("txtDateFrom");
-            String dateToString = request.getParameter("txtDateTo");
-            url = "DispatcherController"
-                    + "?txtCategory=" + category
-                    + "&txtName=" + name
-                    + "&txtDateFrom=" + dateFromString
-                    + "&txtDateTo=" + dateToString
-                    + "&btAction=Search";
-
+            if (validate) {
+                dao.getHistoryBooking(dto.getEmail(), date);
+                List<BookingHistoryDTO> listBookingHistory = dao.getListBookingHistory();
+                session.setAttribute("LISTBOOKINGHISTORY", listBookingHistory);
+            }
+            url = SUCCESS;
+        } catch (SQLException ex) {
+            log("ShowHistoryBookingServlet_SQL " + ex.getMessage());
+        } catch (NamingException ex) {
+            log("ShowHistoryBookingServlet_Naming " + ex.getMessage());
+        } catch (ParseException ex) {
+            log("ShowHistoryBookingServlet_Parse " + ex.getMessage());
         } finally {
-            response.sendRedirect(url);
+            request.getRequestDispatcher(url).forward(request, response);
             out.close();
         }
     }

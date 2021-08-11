@@ -20,7 +20,6 @@ import locnt.dtos.AccountDTO;
  */
 public class DispatcherController extends HttpServlet {
 
-    private final String INVALID_PAGE = "invalid.html";
     private final String ERROR_PAGE = "errors.html";
     private final String LOGIN_PAGE = "login.jsp";
     private final String LOGIN_SERVLET = "LoginServlet";
@@ -32,7 +31,8 @@ public class DispatcherController extends HttpServlet {
     private final String CHECK_OUT_SERVLET = "CheckoutServlet";
     private final String SEARCH_BOOKING_SERVLET = "SearchBookingServlet";
     private final String UPDATE_BOOKING_SERVLET = "UpdateBookingServlet";
-    private final String SHOW_HISTORY_BOOKING_SERVLET = "ShowHistoryBooking";
+    private final String SHOW_HISTORY_BOOKING_SERVLET = "ShowHistoryBookingServlet";
+    private final String DELETE_BOOKING_SERVLET = "DeleteBookingServlet";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -51,7 +51,7 @@ public class DispatcherController extends HttpServlet {
                 url = LOGIN_SERVLET;
             } else if (button.equals("Logout")) {
                 url = LOGOUT_SERVLET;
-            } else if (button.equals("History")) {
+            } else if (button.equals("SearchHistory")) {
                 url = SHOW_HISTORY_BOOKING_SERVLET;
             } else if (button.equals("Search")) {
                 url = SEARCH_RESOURCE_SERVLET;
@@ -65,15 +65,15 @@ public class DispatcherController extends HttpServlet {
                         } else if (button.equals("Update")) {
                             url = UPDATE_BOOKING_SERVLET;
                         }
-                    } else if (user.getRoleId() == 2) {// role leader
-
-                    } else { // role employee
+                    } else if (user.getRoleId() == 2 || user.getRoleId() == 3) {// role leader and employee
                         if (button.equals("Add to cart")) {
                             url = ADD_ITEM_TO_CART_SERVLET;
                         } else if (button.equals("Remove Items")) {
                             url = REMOVE_ITEMS_SERVLET;
                         } else if (button.equals("Checkout")) {
                             url = CHECK_OUT_SERVLET;
+                        } else if (button.equals("Delete")) {
+                            url = DELETE_BOOKING_SERVLET;
                         }
                     }
 

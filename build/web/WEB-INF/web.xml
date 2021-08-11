@@ -41,12 +41,16 @@
         <servlet-class>locnt.controller.UpdateBookingServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ShowHistoryBooking</servlet-name>
-        <servlet-class>locnt.controller.ShowHistoryBooking</servlet-class>
+        <servlet-name>ShowHistoryBookingServlet</servlet-name>
+        <servlet-class>locnt.controller.ShowHistoryBookingServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoginGoogleSevlet</servlet-name>
         <servlet-class>locnt.controller.LoginGoogleSevlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteBookingServlet</servlet-name>
+        <servlet-class>locnt.controller.DeleteBookingServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>DispatcherController</servlet-name>
@@ -89,12 +93,16 @@
         <url-pattern>/UpdateBookingServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ShowHistoryBooking</servlet-name>
-        <url-pattern>/ShowHistoryBooking</url-pattern>
+        <servlet-name>ShowHistoryBookingServlet</servlet-name>
+        <url-pattern>/ShowHistoryBookingServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoginGoogleSevlet</servlet-name>
         <url-pattern>/LoginGoogleSevlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteBookingServlet</servlet-name>
+        <url-pattern>/DeleteBookingServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

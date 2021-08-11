@@ -32,9 +32,10 @@
                             </c:if>
 
                             <c:if test="${not empty user}">
-                                <!--<input type="submit" value="View Cart" name="btAction" style="color: black" />-->
-                                <a href="viewCart.jsp" style="margin-right: 20px">View Cart</a>
-                                <input type="submit" value="History" name="btAction" />
+                                <c:if test="${user.roleId != 1}">
+                                    <a href="viewCart.jsp" style="margin-right: 20px">View Cart</a>
+                                    <a href="historyRequest.jsp">History</a>
+                                </c:if>
                                 <input type="submit" value="Logout" name="btAction" style="color: black" />
                             </c:if>
                         </ul>

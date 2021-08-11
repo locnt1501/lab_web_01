@@ -7,44 +7,58 @@ package locnt.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Date;
 import java.sql.SQLException;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.naming.NamingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import locnt.booking.BookingDAO;
-import locnt.dtos.AccountDTO;
-import locnt.dtos.BookingHistoryDTO;
 
 /**
  *
  * @author LocPC
  */
-public class ShowHistoryBooking extends HttpServlet {
+public class DeleteBookingServlet extends HttpServlet {
+
+    private final int IN_ACTIVE = 4;
     private final String SUCCESS = "historyRequest.jsp";
-    private final String FAIL = "invalid.html";
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
-        String url = FAIL;
+        String url = SUCCESS;
         try {
-            HttpSession session = request.getSession();
-            AccountDTO dto = (AccountDTO) session.getAttribute("USER");
+            String dateString = request.getParameter("txtDate");
+            int bookingId = Integer.parseInt(request.getParameter("txtBookingId"));
             BookingDAO dao = new BookingDAO();
-            dao.getHistoryBooking(dto.getEmail());
-            List<BookingHistoryDTO> listBookingHistory = dao.getListBookingHistory();
-            session.setAttribute("LISTBOOKINGHISTORY", listBookingHistory);
-            url = SUCCESS;
-        } catch (SQLException ex) {
-            log("ShowHistoryBookingServlet_SQL" + ex.getMessage());
+            boolean result = dao.updateBookingByStatus(bookingId, IN_ACTIVE);
+            if (result) {
+                url = "DispatcherController"
+                        + "?txtDate=" + dateString
+                        + "&btAction=SearchHistory";
+            }
         } catch (NamingException ex) {
-            log("ShowHistoryBookingServlet_Naming" + ex.getMessage());
+            log("DeleteBookingServlet");
+        } catch (SQLException ex) {
+            Logger.getLogger(DeleteBookingServlet.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            request.getRequestDispatcher(url).forward(request, response);
+            response.sendRedirect(url);
             out.close();
         }
     }

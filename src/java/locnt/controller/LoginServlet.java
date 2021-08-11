@@ -28,6 +28,10 @@ public class LoginServlet extends HttpServlet {
     private final String SEARCH_PAGE = "search.jsp";
     private final String INVALID_PAGE = "invalid.html";
     private final String LOGIN_PAGE = "login.jsp";
+    private final String MANAGE_PROCESS_PAGE = "manageProcess.jsp";
+    private final int ROLE_MANAGER = 1;
+    private final int ROLE_LEADER = 2;
+    private final int ROLE_EMPLOYEE = 3;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -56,24 +60,21 @@ public class LoginServlet extends HttpServlet {
                 foundErr = true;
                 errors.setEmailOrPasswordIncorrect("email or password incorrect!!!");
             }
-//            if (verify == false) {
-//                foundErr = true;
-//                errors.setReCAPTCHANotChecked("reCAPTCHA not checked!!!");
-//            }
+            if (verify == false) {
+                foundErr = true;
+                errors.setReCAPTCHANotChecked("reCAPTCHA not checked!!!");
+            }
             if (foundErr) {
                 request.setAttribute("LOGINERROR", errors);
                 url = LOGIN_PAGE;
             } else {
-                if (result) {
-//                     && verify
+                if (result && verify) {
                     AccountDTO dto = dao.getInformation(email);
                     HttpSession session = request.getSession();
                     session.setAttribute("USER", dto);
-                    if (dto.getRoleId() == 1) { //role manager
-                        url = "manageProcess.jsp";
-                    } else if (dto.getRoleId() == 2) { //role leader
-
-                    } else {
+                    if (dto.getRoleId() == ROLE_MANAGER) { //role manager
+                        url = MANAGE_PROCESS_PAGE;
+                    } else if (dto.getRoleId() == ROLE_LEADER || dto.getRoleId() == ROLE_EMPLOYEE) { //role leader and employee
                         url = SEARCH_PAGE;
                     }
                 }
