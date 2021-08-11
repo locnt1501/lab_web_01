@@ -60,6 +60,10 @@
         <servlet-name>VerifyCodeServlet</servlet-name>
         <servlet-class>locnt.controller.VerifyCodeServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoginGoogleServlet</servlet-name>
+        <servlet-class>locnt.controller.LoginGoogleServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>DispatcherController</servlet-name>
         <url-pattern>/DispatcherController</url-pattern>
@@ -119,6 +123,10 @@
     <servlet-mapping>
         <servlet-name>VerifyCodeServlet</servlet-name>
         <url-pattern>/VerifyCodeServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoginGoogleServlet</servlet-name>
+        <url-pattern>/LoginGoogleServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

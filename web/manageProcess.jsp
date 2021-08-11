@@ -55,6 +55,7 @@
                         <thead>
                             <tr>
                                 <th>No.</th>
+                                <th>Booking ID</th>
                                 <th>Item Name</th>
                                 <th>Date Create</th>
                                 <th>Date Booking From</th>
@@ -69,6 +70,9 @@
                                 <tr>
                                     <td>
                                         ${counter.count}
+                                    </td>
+                                    <td>
+                                        ${dto.getBookingId()}
                                     </td>
                                     <td>
                                         ${dto.getItemName()}
@@ -86,6 +90,7 @@
                                     <td>
                                         ${dto.getEmail()}
                                     </td>
+                                    
                                     <td>
                                         <select name="valueStatus">
                                             <option value="1" ${dto.getStatusId() == 1 ? 'selected="selected"' : ''}>New</option>
@@ -99,6 +104,7 @@
                                         <input type="hidden" name="ddList" value="${param.ddList}" />
                                         <input type="submit" value="Update" name="btAction" />
                                     </td>
+                                    
                                 </tr>
                             </c:forEach>
                         </tbody>

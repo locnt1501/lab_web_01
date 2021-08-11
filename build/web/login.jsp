@@ -89,6 +89,8 @@
 
                 <input type="submit" value="Login" name="btAction" id="button"/>
                 <br/>
+                <a href="https://accounts.google.com/o/oauth2/auth?scope=email&redirect_uri=http://localhost:8084/J3.L.P0016/DispatcherController?btAction=LoginGoogle&response_type=code
+                   &client_id=795340758983-jlomj8c3spd3vqo99pa7hgsqeqlanc9e.apps.googleusercontent.com&approval_prompt=force">Login With Google</a> </br>
                 <a href="createNewAccount.jsp">Click here to Sign Up</a>
             </div>
         </form>

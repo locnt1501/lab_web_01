@@ -34,6 +34,7 @@ public class DispatcherController extends HttpServlet {
     private final String SHOW_HISTORY_BOOKING_SERVLET = "ShowHistoryBookingServlet";
     private final String DELETE_BOOKING_SERVLET = "DeleteBookingServlet";
     private final String VERIFY_CODE_SERVLET = "VerifyCodeServlet";
+    private final String LOGIN_GOOGLE_SERVLET = "LoginGoogleServlet";
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -60,6 +61,8 @@ public class DispatcherController extends HttpServlet {
                 url = CREATE_NEW_ACCOUNT;
             } else if (button.equals("Verify")) {
                 url = VERIFY_CODE_SERVLET;
+            } else if (button.equals("LoginGoogle")) {
+                url = LOGIN_GOOGLE_SERVLET;
             } else {
                 if (user != null) {
                     if (user.getRoleId() == 1) { // role manager
