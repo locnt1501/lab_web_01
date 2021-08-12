@@ -61,10 +61,6 @@ public class SearchResourceServlet extends HttpServlet {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 dateFrom = new Date(sdf.parse(dateFromString).getTime());
                 dateTo = new Date(sdf.parse(dateToString).getTime());
-                Date dateNow = new Date(System.currentTimeMillis() - 24 * 60 * 60 * 1000);
-                if (!dateFrom.after(dateNow)) {
-                    validate = false;
-                }
                 if (!dateTo.after(dateFrom)) {
                     validate = false;
                 }

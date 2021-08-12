@@ -30,6 +30,7 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" href="loginPage">Login</a>
                                 </li>
+                                <c:redirect url="login.jsp"/>
                             </c:if>
 
                             <c:if test="${not empty user}">

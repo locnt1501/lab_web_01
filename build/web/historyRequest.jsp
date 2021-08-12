@@ -13,6 +13,33 @@
         <title>History Request Page</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <style>
+            #history-booking {
+                font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+
+            }
+
+            #history-booking td, #history-booking th {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: center
+            }
+
+            #history-booking tr:nth-child(even){background-color: #f2f2f2;}
+
+            #history-booking tr:hover {background-color: #ddd;}
+
+            #history-booking th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #04AA6D;
+                color: white;
+                text-align: center
+            }
+        </style>
     </head>
     <body>
         <nav class="navbar navbar-expand-sm navbar-dark ">
@@ -23,8 +50,9 @@
                         <c:set var="user" value="${sessionScope.USER}"/>
                         <c:if test="${empty user}">
                             <li class="nav-item">
-                                <a class="nav-link active" href="loginPage">Login</a>
+                                <a class="nav-link active" href="login.jsp">Login</a>
                             </li>
+                            <c:redirect url="login.jsp"/>
                         </c:if>
 
                         <c:if test="${not empty user}">
@@ -38,8 +66,7 @@
         <form action="DispatcherController">
             <div class="row">
                 <div class="form-group col-6">
-                    <label class="text-light">Date</label>
-                    <input class="form-control" placeholder="Date" type="date" name="txtDate" value="${param.txtDate}">
+                    Date: <input class="form-control" placeholder="Date" type="date" name="txtDate" value="${param.txtDate}">
                 </div>
             </div>
             <div class="form-group">
@@ -48,7 +75,7 @@
         </form>
         <c:set var="listBookingHistory" value="${sessionScope.LISTBOOKINGHISTORY}" />
         <c:if test="${not empty listBookingHistory}">
-            <table border="1">
+            <table id="history-booking">
                 <thead>
                     <tr>
                         <th>No.</th>
@@ -64,14 +91,14 @@
                             <td>${counter.count}</td>
                             <td>
                                 <table border="1" style="width: 100%">
-                                        <tbody  >
-                                            <c:forEach var="item" items="${dto.listItemName}">
-                                                <tr>
-                                                    <td>${item}</td>
-                                                </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
+                                    <tbody  >
+                                        <c:forEach var="item" items="${dto.listItemName}">
+                                            <tr>
+                                                <td>${item}</td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
                             </td>
                             <td>${dto.createDate}</td>
                             <td>${dto.status}</td>

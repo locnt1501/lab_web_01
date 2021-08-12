@@ -16,19 +16,47 @@
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+        <style>
+            #search-table {
+                font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+                
+            }
+
+            #search-table td, #search-table th {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: center
+            }
+
+            #search-table tr:nth-child(even){background-color: #f2f2f2;}
+
+            #search-table tr:hover {background-color: #ddd;}
+
+            #search-table th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #04AA6D;
+                color: white;
+                text-align: center
+            }
+        </style>
     </head>
     <body>
         <div>
             <nav class="navbar navbar-expand-sm navbar-dark ">
                 <h2 class="navbar-brand display-4" style="color: black"> Welcome ${sessionScope.USER.name}</h2>
-                <div class="collapse navbar-collapse">
+                <div class="collapse navbar-collapse" >
                     <form action="DispatcherController" >
                         <ul class="navbar-nav ml-auto">
                             <c:set var="user" value="${sessionScope.USER}"/>
                             <c:if test="${empty user}">
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="loginPage">Login</a>
+                                    <a class="nav-link active" href="login.jsp">Login</a>
                                 </li>
+                                <c:redirect url="login.jsp"/>
                             </c:if>
 
                             <c:if test="${not empty user}">
@@ -83,7 +111,7 @@
         </div> 
         <c:set var="listResourceSearch" value="${requestScope.SEARCHRESULT}"/>
         <c:if test="${not empty listResourceSearch}">
-            <table border="1">
+            <table id="search-table">
                 <thead>
                     <tr>
                         <th>No.</th>

@@ -13,6 +13,33 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
         <title>Manage Process Page</title>
+        <style>
+            #manage-table {
+                font-family: Arial, Helvetica, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+
+            }
+
+            #manage-table td, #manage-table th {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: center
+            }
+
+            #manage-table tr:nth-child(even){background-color: #f2f2f2;}
+
+            #manage-table tr:hover {background-color: #ddd;}
+
+            #manage-table th {
+                padding-top: 12px;
+                padding-bottom: 12px;
+                text-align: left;
+                background-color: #04AA6D;
+                color: white;
+                text-align: center
+            }
+        </style>
     </head>
     <body>
         <div>
@@ -24,8 +51,9 @@
                             <c:set var="user" value="${sessionScope.USER}"/>
                             <c:if test="${empty user}">
                                 <li class="nav-item">
-                                    <a class="nav-link active" href="loginPage">Login</a>
+                                    <a class="nav-link active" href="login.jsp">Login</a>
                                 </li>
+                                <c:redirect url="login.jsp"/>
                             </c:if>
 
                             <c:if test="${not empty user}">
@@ -50,7 +78,7 @@
             <c:set var="listSearchBooking" value="${requestScope.LISTBOOKINGSEARCH}" />
             <a href="search.jsp">Search Resource</a>
             <c:if test="${not empty listSearchBooking}">
-                <table border="1">
+                <table border="1" id="manage-table">
                     <thead>
                         <tr>
                             <th>No.</th>
